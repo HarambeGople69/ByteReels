@@ -10,8 +10,10 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return Scaffold(
+      body:Center(
+        child: Text("Add Screen"),
+      )
     );
   }
 }

@@ -44,7 +44,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Container(
       height: ScreenUtil().setSp(40),
       child: TextFormField(
-       
+        scrollPadding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         cursorColor: Colors.white,
         controller: widget.controller,
         initialValue: widget.initialValue,
@@ -60,7 +62,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
         },
         onChanged: (String value) => widget.onchange ?? (value),
         validator: (String? value) => widget.validator(value!),
-        style: TextStyle(fontSize: ScreenUtil().setSp(15)),
+        style: TextStyle(
+          fontSize: ScreenUtil().setSp(15),
+          color: Colors.white,
+        ),
         keyboardType: widget.type,
         maxLines: widget.length,
         onTap: widget.ontap ?? () {},
@@ -106,7 +111,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
           ),
         ),
-        
       ),
     );
   }
