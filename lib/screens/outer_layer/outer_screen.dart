@@ -16,7 +16,7 @@ class OuterLayerScreen extends StatefulWidget {
 class _OuterLayerScreenState extends State<OuterLayerScreen> {
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
+    return Scaffold(
       body: ValueListenableBuilder(
         valueListenable:
             Hive.box<int>(DatabaseHelper.authenticationDB).listenable(),

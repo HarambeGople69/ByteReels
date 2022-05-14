@@ -9,12 +9,14 @@ import 'package:myapp/db/db_helper.dart';
 import 'package:myapp/screens/authentications/login_screen.dart';
 import 'package:myapp/screens/splash_screen/splash_screen.dart';
 
+import 'app_bindings/app_binding_controller.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Hive.initFlutter();
-
   await Hive.openBox<int>(DatabaseHelper.authenticationDB);
+  await Hive.openBox<String>(DatabaseHelper.userIdDB);
 
   runApp(MyApp());
 }
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
           // useInheritedMediaQuery: true,
           // locale: DevicePreview.locale(context),
           title: "Fmc Cart",
-          // initialBinding: MyBinding(),
+          initialBinding: MyBinding(),
           // useInheritedMediaQuery: true,
           builder: (context, widget) {
             // ScreenUtil.setContext(context);
