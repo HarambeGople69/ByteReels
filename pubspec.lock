@@ -307,6 +307,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.5.2"
+  flutter_snake_navigationbar:
+    dependency: "direct main"
+    description:
+      name: flutter_snake_navigationbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.1"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -632,6 +639,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  rounded_tabbar_widget:
+    dependency: "direct main"
+    description:
+      name: rounded_tabbar_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   shelf:
     dependency: transitive
     description:

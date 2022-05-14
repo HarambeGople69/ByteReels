@@ -75,7 +75,6 @@ class AuthenticationService {
         Hive.box<int>(DatabaseHelper.authenticationDB).clear();
         OurToast().showSuccessToast("Logout successful");
       });
-      print("LogOut");
     } on FirebaseAuthException catch (e) {
       OurToast().showErrorToast(e.message!);
       print(e);

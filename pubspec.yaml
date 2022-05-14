@@ -51,6 +51,9 @@ dependencies:
   flutter_svg: ^1.0.3
   fluttertoast: ^8.0.9
   cloud_firestore: ^3.1.15
+  rounded_tabbar_widget: ^0.0.2
+  flutter_snake_navigationbar: ^0.6.1
+  
 
 dev_dependencies:
   flutter_test:
