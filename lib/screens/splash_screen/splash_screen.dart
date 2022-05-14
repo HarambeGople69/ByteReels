@@ -62,6 +62,36 @@ class _SplashScreenState extends State<SplashScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+        height: ScreenUtil().setSp(40),
+        margin: EdgeInsets.symmetric(
+          horizontal: ScreenUtil().setSp(5),
+          vertical: ScreenUtil().setSp(10),
+        ),
+        child: Center(
+            child: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                  text: "Powered by ",
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(15),
+                    fontWeight: FontWeight.w600,
+                  )
+                  // style: paratext,
+                  ),
+              TextSpan(
+                text: 'Harambe Gople Studio',
+                style: TextStyle(
+                  color: logoColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: ScreenUtil().setSp(15),
+                ),
+              )
+            ],
+          ),
+        )),
+      ),
     );
   }
 }

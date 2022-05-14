@@ -14,12 +14,14 @@ import 'package:myapp/services/authentication_services/authentication_services.d
 // import 'package:myapp/model/signup_request.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_elevated_button.dart';
+import 'package:myapp/widgets/our_flutter_toast.dart';
 // import 'package:myapp/widgets/our_flutter_toast.dart';
 import 'package:myapp/widgets/our_password_field.dart';
 import 'package:myapp/widgets/our_sized_box.dart';
 import 'package:myapp/widgets/our_spinner.dart';
 import 'package:myapp/widgets/our_text_field.dart';
 
+import '../../services/check peserved name/check_reserved_name.dart';
 import '../../widgets/our_shimmer_text.dart';
 // import 'package:provider/provider.dart';
 
@@ -39,7 +41,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _phone_controller = TextEditingController();
   TextEditingController _email_controller = TextEditingController();
   TextEditingController _password_controller = TextEditingController();
-  TextEditingController _username_controller = TextEditingController();
 
   final _name_node = FocusNode();
   final _phone_node = FocusNode();
@@ -82,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         icon: Icons.person,
                         controller: _name_controller,
                         validator: (value) {},
-                        title: "Full Name",
+                        title: "User name",
                         type: TextInputType.name,
                         number: 0,
                       ),
@@ -121,12 +122,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       OurElevatedButton(
                         title: "Sign Up",
                         function: () async {
-                          AuthenticationService().signup(
-                            _name_controller.text.trim(),
-                            _email_controller.text.trim(),
-                            _password_controller.text.trim(),
-                            _phone_controller.text.trim(),
-                          );
+                          if (_name_controller.text.trim().isEmpty ||
+                              _email_controller.text.trim().isEmpty ||
+                              _password_controller.text.trim().isEmpty ||
+                              _phone_controller.text.trim().isEmpty) {
+                            OurToast().showErrorToast("Fields can't be empty");
+                          } else {
+                            print("object1");
+                            Get.find<ProcessingController>().toggle(true);
+
+                            // if (response == true) {
+                            await AuthenticationService().signup(
+                              _name_controller.text.trim(),
+                              _email_controller.text.trim(),
+                              _password_controller.text.trim(),
+                              _phone_controller.text.trim(),
+                              context,
+                            );
+                            // } else {
+                            //   OurToast()
+                            //       .showErrorToast("Username already taken");
+                            // }
+                            Get.find<ProcessingController>().toggle(false);
+                          }
                         },
                       ),
                     ],

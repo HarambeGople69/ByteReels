@@ -17,7 +17,6 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox<int>(DatabaseHelper.authenticationDB);
   await Hive.openBox<String>(DatabaseHelper.userIdDB);
-
   runApp(MyApp());
 }
 

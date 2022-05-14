@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:myapp/screens/authentications/signup_screen.dart';
@@ -12,6 +13,7 @@ import 'package:myapp/services/authentication_services/authentication_services.d
 // import 'package:myapp/screen/authentication_screen/signup_screen.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_elevated_button.dart';
+import 'package:myapp/widgets/our_flutter_toast.dart';
 // import 'package:myapp/widgets/our_flutter_toast.dart';
 import 'package:myapp/widgets/our_password_field.dart';
 import 'package:myapp/widgets/our_shimmer_text.dart';
@@ -92,10 +94,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: OurElevatedButton(
                           title: "Login",
                           function: () async {
-                            await AuthenticationService().login(
-                              _email_controller.text.trim(),
-                              _password_controller.text.trim(),
-                            );
+                            if (_email_controller.text.trim().isEmpty ||
+                                _password_controller.text.trim().isEmpty) {
+                              OurToast()
+                                  .showErrorToast("Fields can't be empty");
+                            } else {
+                              await AuthenticationService().login(
+                                _email_controller.text.trim(),
+                                _password_controller.text.trim(),
+                              );
+                            }
                           },
                         ),
                       ),
