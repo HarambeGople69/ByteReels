@@ -14,7 +14,6 @@ import 'package:myapp/screens/dashboard/search_screen.dart';
 import 'package:myapp/services/authentication_services/authentication_services.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_elevated_button.dart';
-import 'package:rounded_tabbar_widget/rounded_tabbar_widget.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({Key? key}) : super(key: key);

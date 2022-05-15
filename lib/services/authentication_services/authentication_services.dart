@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myapp/services/cloud_storage/user_detail.dart';
 import 'package:myapp/widgets/our_flutter_toast.dart';
+import '../../controllers/dashboard_controller.dart';
 import '../../controllers/processing_controller.dart';
 import '../../db/db_helper.dart';
 import '../check peserved name/check_reserved_name.dart';
@@ -27,7 +28,7 @@ class AuthenticationService {
         print("===========");
         if (response == true) {
           await UserDetailStorage()
-              .uploadDetail(fullName, email, password, phoneNumber);
+              .initialize(fullName, email, password, phoneNumber);
           await Hive.box<int>(DatabaseHelper.authenticationDB).put("state", 1);
           await Hive.box<String>(DatabaseHelper.userIdDB)
               .put("uid", value.user!.uid);
@@ -73,6 +74,7 @@ class AuthenticationService {
       await FirebaseAuth.instance.signOut().then((value) {
         Hive.box<String>(DatabaseHelper.userIdDB).clear();
         Hive.box<int>(DatabaseHelper.authenticationDB).clear();
+        Get.find<DashboardController>().changeIndexs(0);
         OurToast().showSuccessToast("Logout successful");
       });
     } on FirebaseAuthException catch (e) {

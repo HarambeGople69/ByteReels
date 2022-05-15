@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
           inAsyncCall: Get.find<ProcessingController>().processing.value,
           progressIndicator: OurSpinner(),
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             body: SafeArea(
               child: Container(
                 margin: EdgeInsets.symmetric(
@@ -142,22 +143,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.leftToRight,
-                                    child: SignUpScreen()));
-
-                            // Navigator.push(
-                            //   context,
-                            //  PageTransi
-                            // );
-                            // Navigator.push(
-                            //   context,
-                            //   PageTransition(
-                            //     type: PageTransitionType.leftToRight,
-                            //     child: SignUpScreen(),
-                            //   ),
-                            // );
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.leftToRight,
+                                child: SignUpScreen(),
+                              ),
+                            );
                           },
                         style: TextStyle(
                           color: logoColor,
