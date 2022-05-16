@@ -8,7 +8,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myapp/db/db_helper.dart';
 import 'package:myapp/screens/authentications/login_screen.dart';
 import 'package:myapp/screens/splash_screen/splash_screen.dart';
-
 import 'app_bindings/app_binding_controller.dart';
 
 Future<void> main() async {

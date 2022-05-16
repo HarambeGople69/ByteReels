@@ -74,8 +74,8 @@ class AuthenticationService {
       await FirebaseAuth.instance.signOut().then((value) {
         Hive.box<String>(DatabaseHelper.userIdDB).clear();
         Hive.box<int>(DatabaseHelper.authenticationDB).clear();
-        Get.find<DashboardController>().changeIndexs(0);
         OurToast().showSuccessToast("Logout successful");
+        Get.find<DashboardController>().changeIndexs(0);
       });
     } on FirebaseAuthException catch (e) {
       OurToast().showErrorToast(e.message!);

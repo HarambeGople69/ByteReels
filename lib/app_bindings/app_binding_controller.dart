@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:myapp/controllers/dashboard_controller.dart';
 import 'package:myapp/controllers/processing_controller.dart';
+import 'package:myapp/controllers/video_controller.dart';
 
 class MyBinding implements Bindings {
   @override
@@ -12,6 +13,9 @@ class MyBinding implements Bindings {
     );
     Get.lazyPut(
       () => DashboardController(),
+    );
+    Get.lazyPut(
+      () => VideoController(),
     );
   }
 }
