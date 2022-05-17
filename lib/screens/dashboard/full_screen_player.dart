@@ -257,15 +257,51 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                               ),
                             ],
                           ),
-                          Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                            size: ScreenUtil().setSp(30),
+                          Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  print("Comment pressed");
+                                },
+                                child: Icon(
+                                  Icons.comment,
+                                  color: Colors.blueAccent,
+                                  size: ScreenUtil().setSp(30),
+                                ),
+                              ),
+                              SizedBox(
+                                height: ScreenUtil().setSp(5),
+                              ),
+                              Text(
+                                0.toString(),
+                                style: TextStyle(
+                                  fontSize: ScreenUtil().setSp(17.5),
+                                ),
+                              ),
+                            ],
                           ),
-                          Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                            size: ScreenUtil().setSp(30),
+                          Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  print("Download pressed");
+                                },
+                                child: Icon(
+                                  Icons.download,
+                                  color: Colors.amber,
+                                  size: ScreenUtil().setSp(30),
+                                ),
+                              ),
+                              SizedBox(
+                                height: ScreenUtil().setSp(5),
+                              ),
+                              Text(
+                                0.toString(),
+                                style: TextStyle(
+                                  fontSize: ScreenUtil().setSp(17.5),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       );
@@ -290,14 +326,4 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
     );
   }
 
-  // Future<bool> onLikeButtonTapped(bool isLiked) async {
-  //   /// send your request here
-  //   // final bool success= await sendRequest();
-
-  //   /// if failed, you can do nothing
-  //   // return success? !isLiked:isLiked;
-  //   await LikeUnlikeFeature().likeunlike(widget.videoModel);
-  //   print("Button Pressed");
-  //   return !isLiked;
-  // }
 }
