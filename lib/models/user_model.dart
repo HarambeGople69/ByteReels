@@ -55,7 +55,7 @@ class UserModel {
     return result;
   }
 
-  factory UserModel.fromMap(DocumentSnapshot  map) {
+  factory UserModel.fromMap(DocumentSnapshot map) {
     return UserModel(
       post: map['post']?.toInt() ?? 0,
       follower: map['follower']?.toInt() ?? 0,
@@ -91,7 +91,7 @@ class UserModel {
     String? uid,
     String? email,
     String? password,
-    List? searchfrom,
+    List<String>? searchfrom,
     List? followerList,
     List? followingList,
   }) {
