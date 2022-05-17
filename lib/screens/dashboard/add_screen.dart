@@ -186,11 +186,16 @@ class _AddScreenState extends State<AddScreen> {
                                                       .videoUrl
                                                       .value,
                                                 );
-                                                controller.dispose();
-                                                Get.find<DashboardController>()
-                                                    .changeIndexs(0);
-                                                Get.find<ProcessingController>()
-                                                    .toggle(false);
+                                                controller
+                                                    .dispose()
+                                                    .then((value) {
+                                                  Get.find<
+                                                          DashboardController>()
+                                                      .changeIndexs(0);
+                                                  Get.find<
+                                                          ProcessingController>()
+                                                      .toggle(false);
+                                                });
                                               }),
                                         ],
                                       ),

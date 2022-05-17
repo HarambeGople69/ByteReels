@@ -9,6 +9,7 @@ import 'package:myapp/screens/dashboard/edit_screen.dart';
 import 'package:myapp/services/authentication_services/authentication_services.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_elevated_button.dart';
+import 'package:myapp/widgets/our_post_tile.dart';
 import 'package:myapp/widgets/our_profile_detail_number_column.dart';
 import 'package:myapp/widgets/our_sized_box.dart';
 import 'package:page_transition/page_transition.dart';
@@ -76,22 +77,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   backgroundColor: Colors.white,
                                                   radius:
                                                       ScreenUtil().setSp(35),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        userModel.profile_pic,
-
-                                                    // Image.network(
-                                                    placeholder:
-                                                        (context, url) =>
-                                                            Image.asset(
-                                                      "assets/images/profile_holder.png",
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      ScreenUtil().setSp(35),
                                                     ),
-                                                    height:
-                                                        ScreenUtil().setSp(50),
-                                                    width:
-                                                        ScreenUtil().setSp(50),
-                                                    fit: BoxFit.cover,
-                                                    //   )
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          userModel.profile_pic,
+
+                                                      // Image.network(
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              Image.asset(
+                                                        "assets/images/profile_holder.png",
+                                                        width: double.infinity,
+                                                        height: ScreenUtil()
+                                                            .setSp(125),
+                                                        fit: BoxFit.fitWidth,
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Image.asset(
+                                                        "assets/images/profile_holder.png",
+                                                        width: double.infinity,
+                                                        height: ScreenUtil()
+                                                            .setSp(125),
+                                                        fit: BoxFit.fitWidth,
+                                                      ),
+                                                      height: ScreenUtil()
+                                                          .setSp(70),
+                                                      width: ScreenUtil()
+                                                          .setSp(70),
+                                                      fit: BoxFit.cover,
+                                                      //   )
+                                                    ),
                                                   ))
                                               : CircleAvatar(
                                                   backgroundColor: Colors.white,
@@ -261,72 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               itemBuilder: (BuildContext ctx, index) {
                                 VideoModel videoModel = VideoModel.fromMap(
                                     snapshot.data!.docs[index]);
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      color: lightlogoColor,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        flex: 5,
-                                        child: Container(
-                                          // padding: EdgeInsets.symmetric(
-                                          //   horizontal: ScreenUtil().setSp(10),
-                                          //   vertical: ScreenUtil().setSp(10),
-                                          // ),
-                                          alignment: Alignment.center,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              ScreenUtil().setSp(15),
-                                            ),
-                                            child: CachedNetworkImage(
-                                              width: double.infinity,
-                                              // height,
-                                              fit: BoxFit.cover,
-                                              imageUrl: videoModel.thumbnailUrl,
-                                              placeholder: (context, url) =>
-                                                  Image.asset(
-                                                "assets/images/place_holder.png",
-                                                width: double.infinity,
-                                                height: ScreenUtil().setSp(125),
-                                                fit: BoxFit.fitWidth,
-                                              ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Image.asset(
-                                                "assets/images/place_holder.png",
-                                                width: double.infinity,
-                                                height: ScreenUtil().setSp(125),
-                                                fit: BoxFit.fitWidth,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      OurSizedBox(),
-                                      Container(
-                                        margin: EdgeInsets.symmetric(
-                                          horizontal: ScreenUtil().setSp(5),
-                                          vertical: ScreenUtil().setSp(5),
-                                        ),
-                                        child: Align(
-                                          alignment: Alignment.bottomRight,
-                                          child: Text(
-                                            timeago.format(
-                                              videoModel.timestamp.toDate(),
-                                            ),
-                                            style: TextStyle(
-                                              fontSize:
-                                                  ScreenUtil().setSp(12.5),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                return OurPostTile(videoModel: videoModel);
                               });
                         }
                         return Text("data2");
