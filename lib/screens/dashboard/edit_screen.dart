@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,13 +17,20 @@ import 'package:myapp/widgets/our_sized_box.dart';
 import 'package:myapp/widgets/our_text_field.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../controllers/processing_controller.dart';
+import '../../models/user_model.dart';
 import '../../services/check peserved name/check_reserved_name.dart';
 import '../../widgets/our_spinner.dart';
 
 class EditScreen extends StatefulWidget {
   final String usernmae;
   final String bio;
-  const EditScreen({Key? key, required this.usernmae, required this.bio})
+  final UserModel userModel;
+
+  const EditScreen(
+      {Key? key,
+      required this.usernmae,
+      required this.bio,
+      required this.userModel})
       : super(key: key);
 
   @override
@@ -109,37 +117,69 @@ class _EditScreenState extends State<EditScreen> {
                   child: Column(
                     children: [
                       Center(
-                        child: file != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  ScreenUtil().setSp(25),
-                                ),
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Image.file(
-                                    file!,
-                                    height: ScreenUtil().setSp(150),
-                                    width: ScreenUtil().setSp(
-                                      150,
+                          child: widget.userModel.profile_pic.isEmpty
+                              ? file != null
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        ScreenUtil().setSp(25),
+                                      ),
+                                      child: Container(
+                                        color: Colors.white,
+                                        child: Image.file(
+                                          file!,
+                                          height: ScreenUtil().setSp(150),
+                                          width: ScreenUtil().setSp(
+                                            150,
+                                          ),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        ScreenUtil().setSp(25),
+                                      ),
+                                      child: Image.asset(
+                                        "assets/images/profile_holder.png",
+                                        height: ScreenUtil().setSp(150),
+                                        width: ScreenUtil().setSp(
+                                          150,
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                              : CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: ScreenUtil().setSp(75),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      ScreenUtil().setSp(35),
                                     ),
-                                    fit: BoxFit.contain,
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.userModel.profile_pic,
+
+                                      // Image.network(
+                                      placeholder: (context, url) =>
+                                          Image.asset(
+                                        "assets/images/profile_holder.png",
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        fit: BoxFit.fitWidth,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Image.asset(
+                                        "assets/images/profile_holder.png",
+                                        width: double.infinity,
+                                        height: ScreenUtil().setSp(125),
+                                        fit: BoxFit.fitWidth,
+                                      ),
+                                      height: ScreenUtil().setSp(150),
+                                      width: ScreenUtil().setSp(150),
+                                      fit: BoxFit.cover,
+                                      //   )
+                                    ),
                                   ),
-                                ),
-                              )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  ScreenUtil().setSp(25),
-                                ),
-                                child: Image.asset(
-                                  "assets/images/profile_holder.png",
-                                  height: ScreenUtil().setSp(150),
-                                  width: ScreenUtil().setSp(
-                                    150,
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                      ),
+                                )),
                       OurSizedBox(),
                       Center(
                         child: OutlinedButton(

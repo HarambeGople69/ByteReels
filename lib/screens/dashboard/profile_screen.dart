@@ -112,7 +112,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       fit: BoxFit.cover,
                                                       //   )
                                                     ),
-                                                  ))
+                                                  ),
+                                                )
                                               : CircleAvatar(
                                                   backgroundColor: Colors.white,
                                                   radius:
@@ -178,6 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                   .user_name,
                                                               bio:
                                                                   userModel.bio,
+                                                              userModel:
+                                                                  userModel,
                                                             ),
                                                           ),
                                                         );

@@ -52,15 +52,26 @@ class UserDetailStorage {
       );
     }
     try {
-      await FirebaseFirestore.instance
-          .collection("Users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        "bio": bio,
-        "profile_pic": imageurl,
-        "user_name": fullname,
-        "searchfrom": searchList,
-      });
+      if (imageurl.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "bio": bio,
+          "profile_pic": imageurl,
+          "user_name": fullname,
+          "searchfrom": searchList,
+        });
+      } else {
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "bio": bio,
+          "user_name": fullname,
+          "searchfrom": searchList,
+        });
+      }
       OurToast().showSuccessToast("Profile Updated");
     } on FirebaseAuthException catch (e) {
       print(e.message);
