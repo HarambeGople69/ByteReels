@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           // useInheritedMediaQuery: true,
           // locale: DevicePreview.locale(context),
-          title: "Fmc Cart",
+          title: "ByteReels",
           initialBinding: MyBinding(),
           // useInheritedMediaQuery: true,
           builder: (context, widget) {

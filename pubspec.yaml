@@ -79,6 +79,12 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   build_runner: ^2.1.10
   hive_generator: ^1.1.2
+  icons_launcher: ^1.1.8
+
+flutter_icons:
+  image_path: 'assets/images/logo.png'
+  ios: true
+  android: true
 
 
 # For information on the generic Dart part of this file, see the
