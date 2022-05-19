@@ -71,4 +71,27 @@ class UserProfileUpload {
       print(e);
     }
   }
+
+  removePostNumberIncrement() async {
+    UserModel userModel = UserModel.fromMap(
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get(),
+
+    );
+      try {
+        await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update(
+        {
+          "post": userModel.post - 1,
+        },
+      );
+      } catch (e) {
+        print(e);
+      }
+  }
+
 }

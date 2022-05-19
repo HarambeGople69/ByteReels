@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myapp/models/video_model.dart';
 import 'package:myapp/widgets/our_flutter_toast.dart';
 import 'package:uuid/uuid.dart';
+
+import '../firebase_storage/user_info_storage.dart';
 
 class VideoDetailStorage {
   Future<void> uploadVideo(
@@ -35,6 +38,24 @@ class VideoDetailStorage {
       print("=============");
       print(e.toString());
       print("=============");
+    }
+  }
+
+  deleteVideo(VideoModel videoModel) async {
+    print("Delete video");
+    try {
+      await FirebaseFirestore.instance
+          .collection("Videos")
+          .doc(videoModel.ownerId)
+          .collection("MyVideos")
+          .doc(videoModel.postId)
+          .delete()
+          .then((value) async {
+        await UserProfileUpload().removePostNumberIncrement();
+        OurToast().showSuccessToast("Post Deleted");
+      });
+    } catch (e) {
+      print(e);
     }
   }
 }

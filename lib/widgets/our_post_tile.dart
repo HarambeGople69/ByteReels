@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:myapp/models/video_model.dart';
 import 'package:myapp/screens/dashboard/full_screen_player.dart';
+import 'package:myapp/services/cloud_storage/video_detail.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_sized_box.dart';
 import 'package:page_transition/page_transition.dart';
@@ -114,20 +116,37 @@ class _OurPostTileState extends State<OurPostTile> {
             ),
             OurSizedBox(),
             Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: ScreenUtil().setSp(5),
-                vertical: ScreenUtil().setSp(5),
+              margin: EdgeInsets.only(
+                left: ScreenUtil().setSp(10),
+                right: ScreenUtil().setSp(10),
+                bottom: ScreenUtil().setSp(10),
               ),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  timeago.format(
-                    widget.videoModel.timestamp.toDate(),
+              child: Row(
+                children: [
+                  Text(
+                    timeago.format(
+                      widget.videoModel.timestamp.toDate(),
+                    ),
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(12.5),
+                    ),
                   ),
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(12.5),
-                  ),
-                ),
+                  Spacer(),
+                  widget.videoModel.ownerId ==
+                          FirebaseAuth.instance.currentUser!.uid
+                      ? InkWell(
+                          onTap: () async {
+                            print("Delete");
+                            await VideoDetailStorage()
+                                .deleteVideo(widget.videoModel);
+                          },
+                          child: Icon(
+                            Icons.delete,
+                            size: ScreenUtil().setSp(20),
+                          ),
+                        )
+                      : Container(),
+                ],
               ),
             )
           ],

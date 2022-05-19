@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:like_button/like_button.dart';
 import 'package:myapp/models/comment_model.dart';
 import 'package:myapp/models/video_model.dart';
@@ -10,8 +15,10 @@ import 'package:myapp/services/cloud_storage/comment_detail.dart';
 import 'package:myapp/services/firebase_storage/like_unlike_feature.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_animated_profile.dart';
+import 'package:myapp/widgets/our_flutter_toast.dart';
 import 'package:myapp/widgets/our_spinner.dart';
 import 'package:myapp/widgets/our_text_field.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -28,13 +35,14 @@ class FullScreenPlay extends StatefulWidget {
 
 class _FullScreenPlayState extends State<FullScreenPlay> {
   late VideoPlayerController controller;
+  String progress = "";
   initializeController() {
     setState(() {
       controller = VideoPlayerController.network(widget.videoModel.videoUrl);
       controller.initialize();
       controller.play();
       controller.setVolume(1);
-      controller.setLooping(true);
+      controller.setLooping(false);
       // print("=============");
       // print(controller.value);
       // print("=============");
@@ -297,28 +305,29 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                                 ],
                               ),
                             ),
-                            Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    print("Download pressed");
-                                  },
-                                  child: Icon(
+                            InkWell(
+                              onTap: () {
+                                print("Download pressed");
+                                downloadFile(videoModel.videoUrl, context);
+                              },
+                              child: Column(
+                                children: [
+                                  Icon(
                                     Icons.download,
                                     color: Colors.amber,
                                     size: ScreenUtil().setSp(30),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: ScreenUtil().setSp(5),
-                                ),
-                                Text(
-                                  0.toString(),
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(17.5),
+                                  SizedBox(
+                                    height: ScreenUtil().setSp(5),
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    0.toString(),
+                                    style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(17.5),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         );
@@ -717,5 +726,40 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
             ),
           );
         });
+  }
+
+  downloadFile(String downloadUrl, BuildContext contextt) async {
+    print("==================");
+    print(downloadUrl);
+    print("Download in progress");
+    print("==================");
+    try {
+      final url = downloadUrl;
+      final tempdir = await getTemporaryDirectory();
+      final path = "${tempdir.path}/${downloadUrl}";
+      await Dio().download(url, path,
+          onReceiveProgress: (actualByle, totalbytes) {
+        double percentage = actualByle / totalbytes * 100;
+        setState(() {
+          progress = "Downloading ... ${percentage.floor()}";
+        });
+        print(progress);
+      });
+
+      // final dir = await getApplicationDocumentsDirectory();
+      // final file = File("${dir.path}/${ref.name}");
+      // await ref.writeToFile(file);
+
+      if (url.contains(".mp4")) {
+        await GallerySaver.saveVideo(path, albumName: "ByteReels", toDcim: true)
+            .then((value) {
+          Navigator.pop(contextt);
+          print("======================== DONEEE ==========================");
+        });
+      }
+    } catch (e) {
+      Navigator.pop(contextt);
+      OurToast().showErrorToast(e.toString());
+    }
   }
 }
