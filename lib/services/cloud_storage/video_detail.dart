@@ -31,6 +31,7 @@ class VideoDetailStorage {
         "likes": [],
         "likeNumber": 0,
         "commentNumber": 0,
+        "downloadNumber": 0,
       }).then(
         (value) => OurToast().showSuccessToast("Video uploaded successfully"),
       );
@@ -57,5 +58,16 @@ class VideoDetailStorage {
     } catch (e) {
       print(e);
     }
+  }
+
+  increaseDownloadCount(VideoModel videoModel) async {
+    print("Increase video number count");
+    await FirebaseFirestore.instance
+          .collection("Videos")
+          .doc(videoModel.ownerId)
+          .collection("MyVideos")
+          .doc(videoModel.postId).update({
+            "downloadNumber": videoModel.downloadNumber+1,
+          });
   }
 }

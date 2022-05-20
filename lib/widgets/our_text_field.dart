@@ -61,7 +61,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           }
         },
         onChanged: (String value) {
-          widget.onchange!(value);
+          widget.onchange ?? (value);
         },
         validator: (String? value) => widget.validator(value!),
         style: TextStyle(
