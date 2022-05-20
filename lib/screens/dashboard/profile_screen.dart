@@ -11,6 +11,7 @@ import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_elevated_button.dart';
 import 'package:myapp/widgets/our_post_tile.dart';
 import 'package:myapp/widgets/our_profile_detail_number_column.dart';
+import 'package:myapp/widgets/our_shimmer_widget.dart';
 import 'package:myapp/widgets/our_sized_box.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -238,9 +239,162 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return Text("data2");
                         }
                       }
-                      return Text("data3");
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: ShimmerWidget.circular(
+                                  height: ScreenUtil().setSp(75),
+                                  width: ScreenUtil().setSp(75),
+                                ),
+                              ),
+                              SizedBox(
+                                width: ScreenUtil().setSp(10),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                              horizontal: ScreenUtil().setSp(2),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                ShimmerWidget.rectangular(
+                                                  height: ScreenUtil().setSp(
+                                                    12.5,
+                                                  ),
+                                                  width:
+                                                      ScreenUtil().setSp(100),
+                                                ),
+                                                SizedBox(
+                                                  height: ScreenUtil().setSp(5),
+                                                ),
+                                                ShimmerWidget.rectangular(
+                                                  height: ScreenUtil().setSp(
+                                                    15,
+                                                  ),
+                                                  width: ScreenUtil().setSp(20),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                              horizontal: ScreenUtil().setSp(2),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                ShimmerWidget.rectangular(
+                                                  height: ScreenUtil().setSp(
+                                                    12.5,
+                                                  ),
+                                                  width:
+                                                      ScreenUtil().setSp(100),
+                                                ),
+                                                SizedBox(
+                                                  height: ScreenUtil().setSp(5),
+                                                ),
+                                                ShimmerWidget.rectangular(
+                                                  height: ScreenUtil().setSp(
+                                                    15,
+                                                  ),
+                                                  width: ScreenUtil().setSp(20),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                              horizontal: ScreenUtil().setSp(2),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                ShimmerWidget.rectangular(
+                                                  height: ScreenUtil().setSp(
+                                                    12.5,
+                                                  ),
+                                                  width:
+                                                      ScreenUtil().setSp(100),
+                                                ),
+                                                SizedBox(
+                                                  height: ScreenUtil().setSp(5),
+                                                ),
+                                                ShimmerWidget.rectangular(
+                                                  height: ScreenUtil().setSp(
+                                                    15,
+                                                  ),
+                                                  width: ScreenUtil().setSp(20),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    OurSizedBox(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        ShimmerWidget.rectangular(
+                                          height: ScreenUtil().setSp(
+                                            12.5,
+                                          ),
+                                          width: ScreenUtil().setSp(100),
+                                        ),
+                                        ShimmerWidget.rectangular(
+                                          height: ScreenUtil().setSp(
+                                            12.5,
+                                          ),
+                                          width: ScreenUtil().setSp(100),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          OurSizedBox(),
+                          ShimmerWidget.rectangular(
+                            height: ScreenUtil().setSp(
+                              12.5,
+                            ),
+                            width: ScreenUtil().setSp(100),
+                          ),
+                          SizedBox(
+                            height: ScreenUtil().setSp(4.5),
+                          ),
+                          ShimmerWidget.rectangular(
+                            height: ScreenUtil().setSp(
+                              8.5,
+                            ),
+                            width: ScreenUtil().setSp(150),
+                          ),
+                          Divider(
+                            color: logoColor,
+                          ),
+                        ],
+                      );
                     },
                   ),
+                  OurSizedBox(),
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection("Videos")
@@ -256,21 +410,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
                         if (snapshot.data!.docs.length > 0) {
-                          // return ListView.builder(
-                          //     padding: EdgeInsets.zero,
-                          //     itemCount: snapshot.data!.docs.length,
-                          //     shrinkWrap: true,
-                          //     itemBuilder: (context, index) {
-                          // VideoModel videoModel = VideoModel.fromMap(
-                          //     snapshot.data!.docs[index]);
-                          //       return InkWell(
-                          //         onTap: () {
-                          //           print(videoModel.postId);
-                          //           // print(videoModel.toMap());
-                          //         },
-                          //         child: Text("data1"),
-                          //       );
-                          //     });
                           return GridView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
@@ -284,12 +423,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               itemBuilder: (BuildContext ctx, index) {
                                 VideoModel videoModel = VideoModel.fromMap(
                                     snapshot.data!.docs[index]);
+
                                 return OurPostTile(videoModel: videoModel);
                               });
                         }
-                        return Text("data2");
+                        return Text("Data 2");
                       }
-                      return Text("data3");
+                      return GridView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate:
+                              SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200,
+                                  childAspectRatio: 4 / 4,
+                                  crossAxisSpacing: ScreenUtil().setSp(10),
+                                  mainAxisSpacing: ScreenUtil().setSp(10)),
+                          itemCount: 5,
+                          itemBuilder: (BuildContext ctx, index) {
+                            // VideoModel videoModel = VideoModel.fromMap(
+                            //     snapshot.data!.docs[index]);
+                            return Container(
+                              child: Column(
+                                children: [
+                                  ShimmerWidget.rectangular(
+                                    height: ScreenUtil().setSp(140),
+                                    width: ScreenUtil().setSp(140),
+                                  ),
+                                  OurSizedBox(),
+                                  ShimmerWidget.rectangular(
+                                    height: ScreenUtil().setSp(10),
+                                    width: ScreenUtil().setSp(100),
+                                  )
+                                ],
+                              ),
+                            );
+                          });
                     },
                   ),
                 ],
@@ -297,15 +465,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-
-        // child: Center(
-        //   child: OurElevatedButton(
-        //     title: "Logout",
-        //     function: () async {
-        //       await AuthenticationService().logout();
-        //     },
-        //   ),
-        // ),
       ),
     );
   }

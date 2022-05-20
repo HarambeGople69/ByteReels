@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 import 'package:myapp/models/user_model.dart';
 import 'package:myapp/screens/dashboard/view_profle_screen.dart';
 import 'package:myapp/widgets/our_sized_box.dart';
+import 'package:myapp/widgets/our_spinner.dart';
 import 'package:myapp/widgets/our_text_field.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -222,15 +224,25 @@ class _SearchScreenState extends State<SearchScreen> {
                                           : Container();
                                     });
                               }
-                              return Text("data2");
+                              return Center(
+                                child: Lottie.asset(
+                                  "assets/animations/search.json",
+                                  height: ScreenUtil().setSp(350),
+                                  width: ScreenUtil().setSp(350),
+                                ),
+                              );
                             }
-                            ;
-                            return Text("data3");
+
+                            return Center(
+                              child: OurSpinner(),
+                            );
                           },
                         )
                       : Center(
-                          child: Text(
-                            "No Data",
+                          child: Lottie.asset(
+                            "assets/animations/search.json",
+                            height: ScreenUtil().setSp(350),
+                            width: ScreenUtil().setSp(350),
                           ),
                         ),
                 ],
