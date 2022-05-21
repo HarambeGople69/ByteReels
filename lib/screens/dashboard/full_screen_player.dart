@@ -108,283 +108,308 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                 ),
               ),
               child: SafeArea(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: Center(
-                        child: OurSpinner(),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: VideoPlayer(controller),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        controller.dispose();
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: ScreenUtil().setSp(5),
-                          vertical: ScreenUtil().setSp(5),
-                        ),
-                        height: ScreenUtil().setSp(40),
-                        width: ScreenUtil().setSp(40),
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: ScreenUtil().setSp(25),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.symmetric(
-                          horizontal: ScreenUtil().setSp(10),
-                          vertical: ScreenUtil().setSp(10),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ScreenUtil().setSp(20),
-                          vertical: ScreenUtil().setSp(20),
-                        ),
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection("Users")
-                              .where("uid",
-                                  isEqualTo:
-                                      FirebaseAuth.instance.currentUser!.uid)
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data!.docs.length > 0) {
-                                UserModel userModel =
-                                    UserModel.fromMap(snapshot.data!.docs[0]);
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          userModel.user_name,
-                                          style: TextStyle(
-                                            fontSize: ScreenUtil().setSp(14.5),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(
-                                          height: ScreenUtil().setSp(3.5),
-                                        ),
-                                        Text(
-                                          widget.videoModel.caption,
-                                          style: TextStyle(
-                                            color: Colors.grey[300],
-                                            fontSize: ScreenUtil().setSp(14.5),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                    CircularAnimation(
-                                      child: userModel.profile_pic != ""
-                                          ? CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: ScreenUtil().setSp(25),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  ScreenUtil().setSp(30),
-                                                ),
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      userModel.profile_pic,
+                child: InkWell(
+                  onDoubleTap: () async {
+                    DocumentSnapshot aa = await FirebaseFirestore.instance
+                        .collection("Videos")
+                        .doc(widget.videoModel.ownerId)
+                        .collection("MyVideos")
+                        .doc(widget.videoModel.postId)
+                        .get();
+                    print(aa);
 
-                                                  // Image.network(
-                                                  placeholder: (context, url) =>
-                                                      Image.asset(
-                                                    "assets/images/profile_holder.png",
-                                                    width: double.infinity,
-                                                    height:
-                                                        ScreenUtil().setSp(125),
-                                                    fit: BoxFit.fitWidth,
+                    VideoModel videoModel = VideoModel.fromMap(aa);
+                    print(videoModel);
+                    await LikeUnlikeFeature().likeunlike(videoModel);
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: Center(
+                          child: OurSpinner(),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        child: VideoPlayer(controller),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          controller.dispose();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setSp(5),
+                            vertical: ScreenUtil().setSp(5),
+                          ),
+                          height: ScreenUtil().setSp(40),
+                          width: ScreenUtil().setSp(40),
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: ScreenUtil().setSp(25),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setSp(10),
+                            vertical: ScreenUtil().setSp(10),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setSp(20),
+                            vertical: ScreenUtil().setSp(20),
+                          ),
+                          child: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection("Users")
+                                .where("uid",
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser!.uid)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data!.docs.length > 0) {
+                                  UserModel userModel =
+                                      UserModel.fromMap(snapshot.data!.docs[0]);
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            userModel.user_name,
+                                            style: TextStyle(
+                                              fontSize:
+                                                  ScreenUtil().setSp(14.5),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(
+                                            height: ScreenUtil().setSp(3.5),
+                                          ),
+                                          Text(
+                                            widget.videoModel.caption,
+                                            style: TextStyle(
+                                              color: Colors.grey[300],
+                                              fontSize:
+                                                  ScreenUtil().setSp(14.5),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                      CircularAnimation(
+                                        child: userModel.profile_pic != ""
+                                            ? CircleAvatar(
+                                                backgroundColor: Colors.white,
+                                                radius: ScreenUtil().setSp(25),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    ScreenUtil().setSp(30),
                                                   ),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Image.asset(
-                                                    "assets/images/profile_holder.png",
-                                                    width: double.infinity,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        userModel.profile_pic,
+
+                                                    // Image.network(
+                                                    placeholder:
+                                                        (context, url) =>
+                                                            Image.asset(
+                                                      "assets/images/profile_holder.png",
+                                                      width: double.infinity,
+                                                      height: ScreenUtil()
+                                                          .setSp(125),
+                                                      fit: BoxFit.fitWidth,
+                                                    ),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Image.asset(
+                                                      "assets/images/profile_holder.png",
+                                                      width: double.infinity,
+                                                      height: ScreenUtil()
+                                                          .setSp(125),
+                                                      fit: BoxFit.fitWidth,
+                                                    ),
                                                     height:
-                                                        ScreenUtil().setSp(125),
-                                                    fit: BoxFit.fitWidth,
+                                                        ScreenUtil().setSp(70),
+                                                    width:
+                                                        ScreenUtil().setSp(70),
+                                                    fit: BoxFit.cover,
+                                                    //   )
                                                   ),
-                                                  height:
-                                                      ScreenUtil().setSp(70),
-                                                  width: ScreenUtil().setSp(70),
-                                                  fit: BoxFit.cover,
-                                                  //   )
-                                                ),
-                                              ))
-                                          : CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: ScreenUtil().setSp(25),
-                                              child: Text(
-                                                userModel.user_name[0]
-                                                    .toUpperCase(),
-                                                style: TextStyle(
-                                                  fontSize: ScreenUtil().setSp(
-                                                    20,
+                                                ))
+                                            : CircleAvatar(
+                                                backgroundColor: Colors.white,
+                                                radius: ScreenUtil().setSp(25),
+                                                child: Text(
+                                                  userModel.user_name[0]
+                                                      .toUpperCase(),
+                                                  style: TextStyle(
+                                                    fontSize:
+                                                        ScreenUtil().setSp(
+                                                      20,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return Text("data");
+                              }
+                              return Text("data");
+                            },
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        top: MediaQuery.of(context).size.height * 0.25,
+                        child: Container(
+                          // color: Colors.amber,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setSp(10),
+                            vertical: ScreenUtil().setSp(10),
+                          ),
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          margin: EdgeInsets.only(
+                            right: ScreenUtil().setSp(15),
+                          ),
+                          child: StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("Videos")
+                                .doc(widget.videoModel.ownerId)
+                                .collection("MyVideos")
+                                .doc(widget.videoModel.postId)
+                                .snapshots(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                VideoModel videoModel =
+                                    VideoModel.fromMap(snapshot.data!);
+                                return Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InkWell(
+                                      onLongPress: () {
+                                        likeBottomSheet(
+                                            context, videoModel.likes);
+                                        // print(videoModel.likes);
+                                      },
+                                      onTap: () async {
+                                        await LikeUnlikeFeature()
+                                            .likeunlike(videoModel);
+                                      },
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            videoModel.likes.contains(
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid)
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            color: Colors.red,
+                                            size: ScreenUtil().setSp(35),
+                                          ),
+                                          SizedBox(
+                                            height: ScreenUtil().setSp(5),
+                                          ),
+                                          Text(
+                                            videoModel.likeNumber.toString(),
+                                            style: TextStyle(
+                                              fontSize:
+                                                  ScreenUtil().setSp(17.5),
                                             ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        commentBottomSheet(context, videoModel);
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.comment,
+                                            color: Colors.blueAccent,
+                                            size: ScreenUtil().setSp(30),
+                                          ),
+                                          SizedBox(
+                                            height: ScreenUtil().setSp(5),
+                                          ),
+                                          Text(
+                                            videoModel.commentNumber.toString(),
+                                            style: TextStyle(
+                                              fontSize:
+                                                  ScreenUtil().setSp(17.5),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        print("Download pressed");
+                                        downloadFile(videoModel.videoUrl,
+                                            videoModel, context);
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.download,
+                                            color: Colors.amber,
+                                            size: ScreenUtil().setSp(30),
+                                          ),
+                                          SizedBox(
+                                            height: ScreenUtil().setSp(5),
+                                          ),
+                                          Text(
+                                            videoModel.downloadNumber
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontSize:
+                                                  ScreenUtil().setSp(17.5),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 );
+                              } else {
+                                return Text('asasa');
                               }
-                              return Text("data");
-                            }
-                            return Text("data");
-                          },
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      top: MediaQuery.of(context).size.height * 0.25,
-                      child: Container(
-                        // color: Colors.amber,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ScreenUtil().setSp(10),
-                          vertical: ScreenUtil().setSp(10),
-                        ),
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        margin: EdgeInsets.only(
-                          right: ScreenUtil().setSp(15),
-                        ),
-                        child: StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection("Videos")
-                              .doc(widget.videoModel.ownerId)
-                              .collection("MyVideos")
-                              .doc(widget.videoModel.postId)
-                              .snapshots(),
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.hasData) {
-                              VideoModel videoModel =
-                                  VideoModel.fromMap(snapshot.data!);
-                              return Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  InkWell(
-                                    onLongPress: () {
-                                      likeBottomSheet(
-                                          context, videoModel.likes);
-                                      // print(videoModel.likes);
-                                    },
-                                    onTap: () async {
-                                      await LikeUnlikeFeature()
-                                          .likeunlike(videoModel);
-                                    },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          videoModel.likes.contains(FirebaseAuth
-                                                  .instance.currentUser!.uid)
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          color: Colors.red,
-                                          size: ScreenUtil().setSp(35),
-                                        ),
-                                        SizedBox(
-                                          height: ScreenUtil().setSp(5),
-                                        ),
-                                        Text(
-                                          videoModel.likeNumber.toString(),
-                                          style: TextStyle(
-                                            fontSize: ScreenUtil().setSp(17.5),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      commentBottomSheet(context, videoModel);
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Icon(
-                                          Icons.comment,
-                                          color: Colors.blueAccent,
-                                          size: ScreenUtil().setSp(30),
-                                        ),
-                                        SizedBox(
-                                          height: ScreenUtil().setSp(5),
-                                        ),
-                                        Text(
-                                          videoModel.commentNumber.toString(),
-                                          style: TextStyle(
-                                            fontSize: ScreenUtil().setSp(17.5),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      print("Download pressed");
-                                      downloadFile(videoModel.videoUrl,
-                                          videoModel, context);
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Icon(
-                                          Icons.download,
-                                          color: Colors.amber,
-                                          size: ScreenUtil().setSp(30),
-                                        ),
-                                        SizedBox(
-                                          height: ScreenUtil().setSp(5),
-                                        ),
-                                        Text(
-                                          videoModel.downloadNumber.toString(),
-                                          style: TextStyle(
-                                            fontSize: ScreenUtil().setSp(17.5),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return Text('asasa');
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -804,7 +829,7 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
       if (url.contains(".mp4")) {
         await GallerySaver.saveVideo(
           path,
-          albumName: "ByteReel",
+          albumName: "ByteReels",
         ).then((value) {
           VideoDetailStorage().increaseDownloadCount(videoModel);
           ;
