@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:myapp/models/video_model.dart';
 import 'package:myapp/services/cloud_storage/follow_unfollow_feature.dart';
 import 'package:myapp/utils/colors.dart';
+import 'package:myapp/widgets/our_shimmer_widget.dart';
 import 'package:myapp/widgets/our_sized_box.dart';
 
 import '../../models/user_model.dart';
@@ -213,6 +214,110 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                 Divider(
                                   color: logoColor,
                                 ),
+                                userModel.followerList.contains(
+                                        FirebaseAuth.instance.currentUser!.uid)
+                                    ? StreamBuilder<QuerySnapshot>(
+                                        stream: FirebaseFirestore.instance
+                                            .collection("Videos")
+                                            .doc(widget.uid)
+                                            .collection("MyVideos")
+                                            .orderBy("timestamp",
+                                                descending: true)
+                                            .snapshots(),
+                                        // .where("uid",
+                                        //     isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                                        // .snapshots(),
+
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<QuerySnapshot>
+                                                snapshot) {
+                                          if (snapshot.hasData) {
+                                            if (snapshot.data!.docs.length >
+                                                0) {
+                                              // return ListView.builder(
+                                              //     padding: EdgeInsets.zero,
+                                              //     itemCount: snapshot.data!.docs.length,
+                                              //     shrinkWrap: true,
+                                              //     itemBuilder: (context, index) {
+                                              // VideoModel videoModel = VideoModel.fromMap(
+                                              //     snapshot.data!.docs[index]);
+                                              //       return InkWell(
+                                              //         onTap: () {
+                                              //           print(videoModel.postId);
+                                              //           // print(videoModel.toMap());
+                                              //         },
+                                              //         child: Text("data1"),
+                                              //       );
+                                              //     });
+                                              return GridView.builder(
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                          maxCrossAxisExtent:
+                                                              200,
+                                                          childAspectRatio:
+                                                              4 / 6,
+                                                          crossAxisSpacing: 20,
+                                                          mainAxisSpacing: 20),
+                                                  itemCount: snapshot
+                                                      .data!.docs.length,
+                                                  itemBuilder:
+                                                      (BuildContext ctx,
+                                                          index) {
+                                                    VideoModel videoModel =
+                                                        VideoModel.fromMap(
+                                                            snapshot.data!
+                                                                .docs[index]);
+                                                    return OurPostTile(
+                                                        videoModel: videoModel);
+                                                  });
+                                            }
+                                            return Text("data2");
+                                          }
+                                          return GridView.builder(
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              gridDelegate:
+                                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                                      maxCrossAxisExtent: 200,
+                                                      childAspectRatio: 4 / 4,
+                                                      crossAxisSpacing:
+                                                          ScreenUtil()
+                                                              .setSp(10),
+                                                      mainAxisSpacing:
+                                                          ScreenUtil()
+                                                              .setSp(10)),
+                                              itemCount: 5,
+                                              itemBuilder:
+                                                  (BuildContext ctx, index) {
+                                                // VideoModel videoModel = VideoModel.fromMap(
+                                                //     snapshot.data!.docs[index]);
+                                                return Container(
+                                                  child: Column(
+                                                    children: [
+                                                      ShimmerWidget.rectangular(
+                                                        height: ScreenUtil()
+                                                            .setSp(140),
+                                                        width: ScreenUtil()
+                                                            .setSp(140),
+                                                      ),
+                                                      OurSizedBox(),
+                                                      ShimmerWidget.rectangular(
+                                                        height: ScreenUtil()
+                                                            .setSp(10),
+                                                        width: ScreenUtil()
+                                                            .setSp(100),
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              });
+                                        },
+                                      )
+                                    : Text("Please follow"),
                               ],
                             );
                           });
@@ -220,58 +325,156 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                       return Text("data2");
                     }
                   }
-                  return Text("data3");
-                },
-              ),
-              StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection("Videos")
-                    .doc(widget.uid)
-                    .collection("MyVideos")
-                    .orderBy("timestamp", descending: true)
-                    .snapshots(),
-                // .where("uid",
-                //     isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                // .snapshots(),
-
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data!.docs.length > 0) {
-                      // return ListView.builder(
-                      //     padding: EdgeInsets.zero,
-                      //     itemCount: snapshot.data!.docs.length,
-                      //     shrinkWrap: true,
-                      //     itemBuilder: (context, index) {
-                      // VideoModel videoModel = VideoModel.fromMap(
-                      //     snapshot.data!.docs[index]);
-                      //       return InkWell(
-                      //         onTap: () {
-                      //           print(videoModel.postId);
-                      //           // print(videoModel.toMap());
-                      //         },
-                      //         child: Text("data1"),
-                      //       );
-                      //     });
-                      return GridView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 200,
-                                  childAspectRatio: 4 / 6,
-                                  crossAxisSpacing: 20,
-                                  mainAxisSpacing: 20),
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (BuildContext ctx, index) {
-                            VideoModel videoModel =
-                                VideoModel.fromMap(snapshot.data!.docs[index]);
-                            return OurPostTile(videoModel: videoModel);
-                          });
-                    }
-                    return Text("data2");
-                  }
-                  return Text("data3");
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: ShimmerWidget.circular(
+                              height: ScreenUtil().setSp(75),
+                              width: ScreenUtil().setSp(75),
+                            ),
+                          ),
+                          SizedBox(
+                            width: ScreenUtil().setSp(10),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: ScreenUtil().setSp(2),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            ShimmerWidget.rectangular(
+                                              height: ScreenUtil().setSp(
+                                                12.5,
+                                              ),
+                                              width: ScreenUtil().setSp(100),
+                                            ),
+                                            SizedBox(
+                                              height: ScreenUtil().setSp(5),
+                                            ),
+                                            ShimmerWidget.rectangular(
+                                              height: ScreenUtil().setSp(
+                                                15,
+                                              ),
+                                              width: ScreenUtil().setSp(20),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: ScreenUtil().setSp(2),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            ShimmerWidget.rectangular(
+                                              height: ScreenUtil().setSp(
+                                                12.5,
+                                              ),
+                                              width: ScreenUtil().setSp(100),
+                                            ),
+                                            SizedBox(
+                                              height: ScreenUtil().setSp(5),
+                                            ),
+                                            ShimmerWidget.rectangular(
+                                              height: ScreenUtil().setSp(
+                                                15,
+                                              ),
+                                              width: ScreenUtil().setSp(20),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: ScreenUtil().setSp(2),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            ShimmerWidget.rectangular(
+                                              height: ScreenUtil().setSp(
+                                                12.5,
+                                              ),
+                                              width: ScreenUtil().setSp(100),
+                                            ),
+                                            SizedBox(
+                                              height: ScreenUtil().setSp(5),
+                                            ),
+                                            ShimmerWidget.rectangular(
+                                              height: ScreenUtil().setSp(
+                                                15,
+                                              ),
+                                              width: ScreenUtil().setSp(20),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                OurSizedBox(),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    ShimmerWidget.rectangular(
+                                      height: ScreenUtil().setSp(
+                                        12.5,
+                                      ),
+                                      width: ScreenUtil().setSp(100),
+                                    ),
+                                    ShimmerWidget.rectangular(
+                                      height: ScreenUtil().setSp(
+                                        12.5,
+                                      ),
+                                      width: ScreenUtil().setSp(100),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      OurSizedBox(),
+                      ShimmerWidget.rectangular(
+                        height: ScreenUtil().setSp(
+                          12.5,
+                        ),
+                        width: ScreenUtil().setSp(100),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setSp(4.5),
+                      ),
+                      ShimmerWidget.rectangular(
+                        height: ScreenUtil().setSp(
+                          8.5,
+                        ),
+                        width: ScreenUtil().setSp(150),
+                      ),
+                      Divider(
+                        color: logoColor,
+                      ),
+                    ],
+                  );
                 },
               ),
             ],
