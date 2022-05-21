@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 import 'package:myapp/models/user_model.dart';
 import 'package:myapp/models/video_model.dart';
 import 'package:myapp/screens/dashboard/edit_screen.dart';
@@ -427,7 +428,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 return OurPostTile(videoModel: videoModel);
                               });
                         }
-                        return Text("Data 2");
+                        return Center(
+                          child: Lottie.asset(
+                            "assets/animations/follow.json",
+                            height: ScreenUtil().setSp(200),
+                            width: ScreenUtil().setSp(200),
+                          ),
+                        );
                       }
                       return GridView.builder(
                           physics: NeverScrollableScrollPhysics(),

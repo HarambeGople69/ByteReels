@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 import 'package:myapp/models/video_model.dart';
 import 'package:myapp/services/cloud_storage/follow_unfollow_feature.dart';
 import 'package:myapp/utils/colors.dart';
@@ -317,7 +318,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                               });
                                         },
                                       )
-                                    : Text("Please follow"),
+                                    : Center(
+                                        child: Lottie.asset(
+                                          "assets/animations/follow.json",
+                                          height: ScreenUtil().setSp(200),
+                                          width: ScreenUtil().setSp(200),
+                                        ),
+                                      ),
                               ],
                             );
                           });
