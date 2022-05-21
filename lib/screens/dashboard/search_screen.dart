@@ -40,6 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     icon: Icons.search,
                     onchange: (value) {
                       print(value);
+                      
                       setState(() {});
                     },
                     controller: _search_user_controller,
@@ -224,13 +225,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                           : Container();
                                     });
                               }
-                              return Center(
-                                child: Lottie.asset(
-                                  "assets/animations/search.json",
-                                  height: ScreenUtil().setSp(350),
-                                  width: ScreenUtil().setSp(350),
-                                ),
-                              );
+                              // return Center(
+                              //   child: Lottie.asset(
+                              //     "assets/animations/search.json",
+                              //     height: ScreenUtil().setSp(350),
+                              //     width: ScreenUtil().setSp(350),
+                              //   ),
+                              // );
                             }
 
                             return Center(

@@ -156,7 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .toString(),
                                                   ),
                                                   OurProfileDetailNumberColumn(
-                                                    title: "Followers",
+                                                    title: "Following",
                                                     number: userModel.following
                                                         .toString(),
                                                   ),

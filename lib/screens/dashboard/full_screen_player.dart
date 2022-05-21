@@ -14,7 +14,7 @@ import 'package:myapp/models/comment_model.dart';
 import 'package:myapp/models/video_model.dart';
 import 'package:myapp/services/cloud_storage/comment_detail.dart';
 import 'package:myapp/services/cloud_storage/video_detail.dart';
-import 'package:myapp/services/firebase_storage/like_unlike_feature.dart';
+import 'package:myapp/services/cloud_storage/like_unlike_feature.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_animated_profile.dart';
 import 'package:myapp/widgets/our_flutter_toast.dart';
@@ -38,6 +38,8 @@ class FullScreenPlay extends StatefulWidget {
 
 class _FullScreenPlayState extends State<FullScreenPlay> {
   late VideoPlayerController controller;
+  bool isLiked = false;
+  bool isHeartAnimating = false;
   String progress = "";
   initializeController() {
     setState(() {
