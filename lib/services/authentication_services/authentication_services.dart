@@ -54,11 +54,11 @@ class AuthenticationService {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) async {
+        await UserDetailStorage().storeNotificationToken();
         await Hive.box<int>(DatabaseHelper.authenticationDB).put("state", 1);
         await Hive.box<String>(DatabaseHelper.userIdDB)
             .put("uid", value.user!.uid);
         print(value.user!.uid);
-
         print("Login Successful");
         OurToast().showSuccessToast("Login successful");
       });

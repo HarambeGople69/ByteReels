@@ -43,7 +43,19 @@ class UserDetailStorage {
     }
   }
 
-  
+  storeNotificationToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    try {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "token": token,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   update(String fullname, String bio, String imageurl) async {
     print("===============");

@@ -43,24 +43,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     super.initState();
     FirebaseMessaging.instance.getInitialMessage();
     FirebaseMessaging.onMessage.listen((event) {
+      print("object 1");
       LocalNotificationService.display(event);
     });
-    storeNotificationToken();
+    // storeNotificationToken();
   }
 
-  storeNotificationToken() async {
-    String? token = await FirebaseMessaging.instance.getToken();
-    try {
-      await FirebaseFirestore.instance
-          .collection("Users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        "token": token,
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {

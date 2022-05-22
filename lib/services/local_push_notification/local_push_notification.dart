@@ -49,6 +49,9 @@ class LocalNotificationService {
       'status': 'done',
       'message': "title",
     };
+    print("=================");
+    print(token);
+    print("=================");
 
     try {
       http.Response response =
