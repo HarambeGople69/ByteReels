@@ -29,6 +29,7 @@ class _SearchScreenState extends State<SearchScreen> {
         },
         child: SafeArea(
           child: Container(
+            // height: MediaQuery.of(context).size.height * 0.75,
             margin: EdgeInsets.symmetric(
               horizontal: ScreenUtil().setSp(10),
               vertical: ScreenUtil().setSp(10),
@@ -40,7 +41,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     icon: Icons.search,
                     onchange: (value) {
                       print(value);
-                      
+
                       setState(() {});
                     },
                     controller: _search_user_controller,
@@ -234,8 +235,11 @@ class _SearchScreenState extends State<SearchScreen> {
                               // );
                             }
 
-                            return Center(
-                              child: OurSpinner(),
+                            return Container(
+                              width: double.infinity,
+                              child: Center(
+                                child: OurSpinner(),
+                              ),
                             );
                           },
                         )
