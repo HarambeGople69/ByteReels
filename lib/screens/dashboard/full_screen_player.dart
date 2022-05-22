@@ -636,117 +636,161 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                                       if (snapshot.hasData) {
                                         UserModel userModel =
                                             UserModel.fromMap(snapshot.data);
-                                        return Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: ScreenUtil().setSp(10),
-                                            vertical: ScreenUtil().setSp(10),
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              userModel.profile_pic != ""
-                                                  ? CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      radius: ScreenUtil()
-                                                          .setSp(25),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          ScreenUtil()
-                                                              .setSp(25),
-                                                        ),
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl: userModel
-                                                              .profile_pic,
+                                        return InkWell(
+                                          onLongPress: () async {
+                                            if (commentModel.ownerId ==
+                                                FirebaseAuth.instance
+                                                    .currentUser!.uid) {
+                                              await FirebaseFirestore.instance
+                                                  .collection("Videos")
+                                                  .doc(videoModel.ownerId)
+                                                  .collection("MyVideos")
+                                                  .doc(videoModel.postId)
+                                                  .collection("Comments")
+                                                  .doc(commentModel.commentId)
+                                                  .delete()
+                                                  .then((value) {
+                                                OurToast().showSuccessToast(
+                                                    "Comment deleted");
+                                              });
+                                              await FirebaseFirestore.instance
+                                                  .collection("Videos")
+                                                  .doc(videoModel.ownerId)
+                                                  .collection("MyVideos")
+                                                  .doc(videoModel.postId)
+                                                  .update({
+                                                "commentNumber":
+                                                    videoModel.commentNumber -
+                                                        1,
+                                              });
 
-                                                          // Image.network(
-                                                          placeholder:
-                                                              (context, url) =>
-                                                                  Image.asset(
-                                                            "assets/images/profile_holder.png",
-                                                            width:
-                                                                double.infinity,
-                                                            height: ScreenUtil()
-                                                                .setSp(125),
-                                                            fit:
-                                                                BoxFit.fitWidth,
+                                            } else {
+                                              print("You can't delete it");
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal:
+                                                  ScreenUtil().setSp(10),
+                                              vertical: ScreenUtil().setSp(10),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                userModel.profile_pic != ""
+                                                    ? CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        radius: ScreenUtil()
+                                                            .setSp(25),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            ScreenUtil()
+                                                                .setSp(25),
                                                           ),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Image.asset(
-                                                            "assets/images/profile_holder.png",
-                                                            width:
-                                                                double.infinity,
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl: userModel
+                                                                .profile_pic,
+
+                                                            // Image.network(
+                                                            placeholder:
+                                                                (context,
+                                                                        url) =>
+                                                                    Image.asset(
+                                                              "assets/images/profile_holder.png",
+                                                              width: double
+                                                                  .infinity,
+                                                              height:
+                                                                  ScreenUtil()
+                                                                      .setSp(
+                                                                          125),
+                                                              fit: BoxFit
+                                                                  .fitWidth,
+                                                            ),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Image.asset(
+                                                              "assets/images/profile_holder.png",
+                                                              width: double
+                                                                  .infinity,
+                                                              height:
+                                                                  ScreenUtil()
+                                                                      .setSp(
+                                                                          125),
+                                                              fit: BoxFit
+                                                                  .fitWidth,
+                                                            ),
                                                             height: ScreenUtil()
-                                                                .setSp(125),
-                                                            fit:
-                                                                BoxFit.fitWidth,
+                                                                .setSp(70),
+                                                            width: ScreenUtil()
+                                                                .setSp(70),
+                                                            fit: BoxFit.cover,
+                                                            //   )
                                                           ),
-                                                          height: ScreenUtil()
-                                                              .setSp(70),
-                                                          width: ScreenUtil()
-                                                              .setSp(70),
-                                                          fit: BoxFit.cover,
-                                                          //   )
-                                                        ),
-                                                      ))
-                                                  : CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      radius: ScreenUtil()
-                                                          .setSp(20),
-                                                      child: Text(
-                                                        userModel.user_name[0]
-                                                            .toUpperCase(),
-                                                        style: TextStyle(
-                                                          fontSize: ScreenUtil()
-                                                              .setSp(
-                                                            20,
+                                                        ))
+                                                    : CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        radius: ScreenUtil()
+                                                            .setSp(20),
+                                                        child: Text(
+                                                          userModel.user_name[0]
+                                                              .toUpperCase(),
+                                                          style: TextStyle(
+                                                            fontSize:
+                                                                ScreenUtil()
+                                                                    .setSp(
+                                                              20,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                              SizedBox(
-                                                width: ScreenUtil().setSp(20),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      userModel.user_name,
-                                                      style: TextStyle(
-                                                          fontSize: ScreenUtil()
-                                                              .setSp(15),
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                    SizedBox(
-                                                      height: ScreenUtil()
-                                                          .setSp(2.5),
-                                                    ),
-                                                    Text(
-                                                      commentModel.comment,
-                                                    ),
-                                                  ],
+                                                SizedBox(
+                                                  width: ScreenUtil().setSp(20),
                                                 ),
-                                              ),
-                                              Text(
-                                                timeago.format(
-                                                  commentModel.timestamp
-                                                      .toDate(),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        userModel.user_name,
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                ScreenUtil()
+                                                                    .setSp(15),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      SizedBox(
+                                                        height: ScreenUtil()
+                                                            .setSp(2.5),
+                                                      ),
+                                                      Text(
+                                                        commentModel.comment,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                style: TextStyle(
-                                                  fontSize:
-                                                      ScreenUtil().setSp(12.5),
+                                                Text(
+                                                  timeago.format(
+                                                    commentModel.timestamp
+                                                        .toDate(),
+                                                  ),
+                                                  style: TextStyle(
+                                                    fontSize: ScreenUtil()
+                                                        .setSp(12.5),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         );
                                       }
