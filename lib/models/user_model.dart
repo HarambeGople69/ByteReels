@@ -14,6 +14,7 @@ class UserModel {
   final String uid;
   final String email;
   final String password;
+  final String token;
   final List searchfrom;
   final List followerList;
   final List followingList;
@@ -32,6 +33,7 @@ class UserModel {
     required this.searchfrom,
     required this.followerList,
     required this.followingList,
+    required this.token,
   });
 
   Map<String, dynamic> toMap() {
@@ -71,6 +73,7 @@ class UserModel {
       searchfrom: List.from(map['searchfrom']),
       followerList: List.from(map['followerList']),
       followingList: List.from(map['followingList']),
+      token: map['token'] ?? '',
     );
   }
 
@@ -110,6 +113,7 @@ class UserModel {
       searchfrom: searchfrom ?? this.searchfrom,
       followerList: followerList ?? this.followerList,
       followingList: followingList ?? this.followingList,
+      token: token,
     );
   }
 }

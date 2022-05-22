@@ -445,7 +445,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   childAspectRatio: 4 / 4,
                                   crossAxisSpacing: ScreenUtil().setSp(10),
                                   mainAxisSpacing: ScreenUtil().setSp(10)),
-                          itemCount: 5,
+                          itemCount: 6,
                           itemBuilder: (BuildContext ctx, index) {
                             // VideoModel videoModel = VideoModel.fromMap(
                             //     snapshot.data!.docs[index]);

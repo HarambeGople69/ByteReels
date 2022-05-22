@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/widgets/our_flutter_toast.dart';
@@ -7,6 +7,7 @@ import 'package:myapp/widgets/our_flutter_toast.dart';
 class UserDetailStorage {
   initialize(String fullname, String email, String password,
       String phoneNumber) async {
+    String? token = await FirebaseMessaging.instance.getToken();
     print("===============");
     print("Inside user detail storage");
     print("===============");
@@ -35,11 +36,14 @@ class UserDetailStorage {
         "searchfrom": searchList,
         "followerList": [],
         "followingList": [],
+        "token": token,
       });
     } on FirebaseAuthException catch (e) {
       print(e.message);
     }
   }
+
+  
 
   update(String fullname, String bio, String imageurl) async {
     print("===============");

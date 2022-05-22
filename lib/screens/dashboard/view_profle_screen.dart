@@ -183,6 +183,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                               : OurElevatedButton(
                                                   title: "Follow",
                                                   function: () {
+                                                    
                                                     FollowUnfollowDetailFirebase()
                                                         .follow(userModel);
                                                   },
@@ -291,7 +292,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                                       mainAxisSpacing:
                                                           ScreenUtil()
                                                               .setSp(10)),
-                                              itemCount: 5,
+                                              itemCount: 6,
                                               itemBuilder:
                                                   (BuildContext ctx, index) {
                                                 // VideoModel videoModel = VideoModel.fromMap(

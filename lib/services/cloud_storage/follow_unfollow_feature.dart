@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/models/user_model.dart';
+import 'package:myapp/services/local_push_notification/local_push_notification.dart';
 
 class FollowUnfollowDetailFirebase {
   follow(UserModel userModel) async {
@@ -43,6 +44,10 @@ class FollowUnfollowDetailFirebase {
         "followingList": FieldValue.arrayUnion([userModel.uid]),
         "following": followeruserModel.following + 1,
       });
+      await LocalNotificationService().sendNotification(
+          "${followeruserModel.user_name} started following you",
+          "",
+          userModel.token);
     } catch (e) {
       print(e);
     }
@@ -77,6 +82,8 @@ class FollowUnfollowDetailFirebase {
       "followingList": FieldValue.arrayRemove([userModel.uid]),
       "following": followeruserModel.following - 1,
     });
+    // await LocalNotificationService().sendNotification(
+    //     "${followeruserModel.user_name} unfollowed you", "", userModel.token);
     print("Geda Done=================");
   }
 }
