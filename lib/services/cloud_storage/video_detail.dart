@@ -4,7 +4,9 @@ import 'package:myapp/models/video_model.dart';
 import 'package:myapp/widgets/our_flutter_toast.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../models/user_model.dart';
 import '../firebase_storage/user_info_storage.dart';
+import '../local_push_notification/local_push_notification.dart';
 
 class VideoDetailStorage {
   Future<void> uploadVideo(
@@ -62,12 +64,30 @@ class VideoDetailStorage {
 
   increaseDownloadCount(VideoModel videoModel) async {
     print("Increase video number count");
+    UserModel videoUserModel = UserModel.fromMap(await FirebaseFirestore
+        .instance
+        .collection("Users")
+        .doc(videoModel.ownerId)
+        .get());
+    // UserModel userModel = UserModel.fromMap(await FirebaseFirestore.instance
+    //     .collection("Users")
+    //     .doc(FirebaseAuth.instance.currentUser!.uid)
+    //     .get());
     await FirebaseFirestore.instance
-          .collection("Videos")
-          .doc(videoModel.ownerId)
-          .collection("MyVideos")
-          .doc(videoModel.postId).update({
-            "downloadNumber": videoModel.downloadNumber+1,
-          });
+        .collection("Videos")
+        .doc(videoModel.ownerId)
+        .collection("MyVideos")
+        .doc(videoModel.postId)
+        .update({
+      "downloadNumber": videoModel.downloadNumber + 1,
+    }).then((value) async {
+      if (videoModel.ownerId != FirebaseAuth.instance.currentUser!.uid) {
+        await LocalNotificationService().sendNotification(
+          "Someone downloaded your video",
+          "",
+          videoUserModel.token,
+        );
+      }
+    });
   }
 }

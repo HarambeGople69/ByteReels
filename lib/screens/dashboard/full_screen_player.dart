@@ -561,12 +561,20 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                                   ),
                                 );
                               }
-                              return Text("data");
+                              return Center(
+                                child: OurSpinner(),
+                              );
                             },
                           );
                         })
                     : Center(
-                        child: Text("No likes"),
+                        child: Text(
+                          "No likes",
+                          style: TextStyle(
+                            color: logoColor,
+                            fontSize: ScreenUtil().setSp(20),
+                          ),
+                        ),
                       ),
               ),
             ],
@@ -663,7 +671,6 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                                                     videoModel.commentNumber -
                                                         1,
                                               });
-
                                             } else {
                                               print("You can't delete it");
                                             }
@@ -794,14 +801,24 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                                           ),
                                         );
                                       }
-                                      return Text("data");
+                                      return Container();
                                     },
                                   );
                                 });
                           }
-                          return Text("data 2");
+                          return Center(
+                            child: Text(
+                              "No Comments",
+                              style: TextStyle(
+                                color: logoColor,
+                                fontSize: ScreenUtil().setSp(20),
+                              ),
+                            ),
+                          );
                         }
-                        return Text("data 3");
+                        return Center(
+                          child: OurSpinner(),
+                        );
                       },
                     ),
                   ),
