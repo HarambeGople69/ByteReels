@@ -85,6 +85,8 @@ class VideoDetailStorage {
         await LocalNotificationService().sendNotification(
           "Someone downloaded your video",
           "",
+          "",
+          "${videoModel.thumbnailUrl}",
           videoUserModel.token,
         );
       }

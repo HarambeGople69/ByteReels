@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   static void initialize() {
     print("=================");
     print("Inisde Local Notification Service");
@@ -14,7 +15,13 @@ class LocalNotificationService {
     final InitializationSettings initializationSettings =
         InitializationSettings(
             android: AndroidInitializationSettings("@mipmap/ic_launcher"));
-    _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: (payload) {
+        print("object");
+      },
+    );
+    ;
   }
 
   static void display(RemoteMessage message) async {
@@ -23,12 +30,16 @@ class LocalNotificationService {
       // int id = DateTime.now().microsecondsSinceEpoch ~/1000000;
       Random random = new Random();
       int id = random.nextInt(1000);
+      final sound = "notification_sound.wav";
+      // final styleInformation = BigPictureStyleInformation(bigPicture)
       final NotificationDetails notificationDetails = NotificationDetails(
           android: AndroidNotificationDetails(
-        "mychanel",
+        "mychanel2",
         "my chanel",
         importance: Importance.max,
         priority: Priority.high,
+        sound: RawResourceAndroidNotificationSound(sound.split(".").first),
+        // styleInformation: styleInformation
       ));
       print("my id is ${id.toString()}");
       await _flutterLocalNotificationsPlugin.show(
@@ -36,18 +47,22 @@ class LocalNotificationService {
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
+        payload: "message.data['click_action']",
       );
     } on Exception catch (e) {
       print('Error>>>$e');
     }
   }
 
-  sendNotification(String title, String body, String token) async {
+  sendNotification(String title, String body, String senderImage,
+      String imageUrl, String token) async {
     final data = {
       'click_action': 'FLUTTER_NOTIFICATION_CLICK',
       'id': '1',
       'status': 'done',
       'message': "title",
+      "senderImage": senderImage,
+      "imageUrl": imageUrl,
     };
     print("=================");
     print(token);
@@ -64,7 +79,8 @@ class LocalNotificationService {
               body: jsonEncode(<String, dynamic>{
                 'notification': <String, dynamic>{
                   'title': title,
-                  // 'body': body,
+                  'body': body,
+                  'imageUrl': imageUrl
                 },
                 'priority': 'high',
                 'data': data,

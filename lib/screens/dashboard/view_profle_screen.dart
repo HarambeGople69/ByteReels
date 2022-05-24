@@ -146,7 +146,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                                     .toString(),
                                               ),
                                               OurProfileDetailNumberColumn(
-                                                title: "Followers",
+                                                title: "Followering",
                                                 number: userModel.following
                                                     .toString(),
                                               ),
@@ -183,7 +183,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                               : OurElevatedButton(
                                                   title: "Follow",
                                                   function: () {
-                                                    
                                                     FollowUnfollowDetailFirebase()
                                                         .follow(userModel);
                                                   },
@@ -236,21 +235,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                           if (snapshot.hasData) {
                                             if (snapshot.data!.docs.length >
                                                 0) {
-                                              // return ListView.builder(
-                                              //     padding: EdgeInsets.zero,
-                                              //     itemCount: snapshot.data!.docs.length,
-                                              //     shrinkWrap: true,
-                                              //     itemBuilder: (context, index) {
-                                              // VideoModel videoModel = VideoModel.fromMap(
-                                              //     snapshot.data!.docs[index]);
-                                              //       return InkWell(
-                                              //         onTap: () {
-                                              //           print(videoModel.postId);
-                                              //           // print(videoModel.toMap());
-                                              //         },
-                                              //         child: Text("data1"),
-                                              //       );
-                                              //     });
                                               return GridView.builder(
                                                   physics:
                                                       NeverScrollableScrollPhysics(),
@@ -276,7 +260,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                                         videoModel: videoModel);
                                                   });
                                             }
-                                            return Text("data2");
+                                            return Center(
+                                              child: Lottie.asset(
+                                                "assets/animations/follow.json",
+                                                height: ScreenUtil().setSp(200),
+                                                width: ScreenUtil().setSp(200),
+                                              ),
+                                            );
                                           }
                                           return GridView.builder(
                                               physics:

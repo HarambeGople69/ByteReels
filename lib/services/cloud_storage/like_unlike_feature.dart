@@ -49,6 +49,9 @@ class LikeUnlikeFeature {
             await LocalNotificationService().sendNotification(
               "${userModel.user_name} liked your video",
               "",
+          "${userModel.profile_pic}",
+              
+              "${videoModel.thumbnailUrl}",
               videoUserModel.token,
             );
           }

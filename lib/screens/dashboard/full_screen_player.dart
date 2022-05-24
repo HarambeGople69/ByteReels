@@ -42,6 +42,7 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
   bool isLiked = false;
   bool isHeartAnimating = false;
   String progress = "";
+  bool canComment = true;
   initializeController() {
     setState(() {
       controller = VideoPlayerController.network(widget.videoModel.videoUrl);
@@ -178,8 +179,7 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                             stream: FirebaseFirestore.instance
                                 .collection("Users")
                                 .where("uid",
-                                    isEqualTo:
-                                        FirebaseAuth.instance.currentUser!.uid)
+                                    isEqualTo: widget.videoModel.ownerId)
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -657,19 +657,20 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                                                   .collection("Comments")
                                                   .doc(commentModel.commentId)
                                                   .delete()
-                                                  .then((value) {
+                                                  .then((value) async {
                                                 OurToast().showSuccessToast(
                                                     "Comment deleted");
-                                              });
-                                              await FirebaseFirestore.instance
-                                                  .collection("Videos")
-                                                  .doc(videoModel.ownerId)
-                                                  .collection("MyVideos")
-                                                  .doc(videoModel.postId)
-                                                  .update({
-                                                "commentNumber":
-                                                    videoModel.commentNumber -
-                                                        1,
+
+                                                await FirebaseFirestore.instance
+                                                    .collection("Videos")
+                                                    .doc(videoModel.ownerId)
+                                                    .collection("MyVideos")
+                                                    .doc(videoModel.postId)
+                                                    .update({
+                                                  "commentNumber":
+                                                      videoModel.commentNumber -
+                                                          1,
+                                                });
                                               });
                                             } else {
                                               print("You can't delete it");
@@ -690,7 +691,7 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                                                         backgroundColor:
                                                             Colors.white,
                                                         radius: ScreenUtil()
-                                                            .setSp(25),
+                                                            .setSp(20),
                                                         child: ClipRRect(
                                                           borderRadius:
                                                               BorderRadius
@@ -837,17 +838,29 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                       ),
                       IconButton(
                         onPressed: () async {
-                          if (_comment_text_controller.text.trim().isEmpty) {
-                            print("Empty");
-                            FocusManager.instance.primaryFocus?.unfocus();
-                          } else {
-                            await CommentDetailFirebase().uploadComment(
-                                _comment_text_controller.text.trim(),
-                                videoModel);
+                          if (canComment == true) {
                             setState(() {
-                              _comment_text_controller.text = "";
+                              canComment = false;
                             });
-                            FocusManager.instance.primaryFocus?.unfocus();
+                            if (_comment_text_controller.text.trim().isEmpty) {
+                              print("Empty");
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            } else {
+                              await CommentDetailFirebase().uploadComment(
+                                  _comment_text_controller.text.trim(),
+                                  videoModel);
+                              setState(() {
+                                _comment_text_controller.text = "";
+                              });
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            }
+                            setState(() {
+                              canComment = true;
+                            });
+                          } else {
+                            print("===================");
+                            print("Can't comment");
+                            print("===================");
                           }
                         },
                         icon: Icon(
