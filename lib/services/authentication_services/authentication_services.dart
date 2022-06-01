@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myapp/services/cloud_storage/user_detail.dart';
+import 'package:myapp/services/compression/compress_image.dart';
 import 'package:myapp/widgets/our_flutter_toast.dart';
 import '../../controllers/dashboard_controller.dart';
 import '../../controllers/processing_controller.dart';
@@ -11,13 +15,17 @@ import '../check peserved name/check_reserved_name.dart';
 
 class AuthenticationService {
   signup(String fullName, String email, String password, String phoneNumber,
-      BuildContext context) async {
+      BuildContext context,File file) async {
+    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+
     Get.find<ProcessingController>().toggle(true);
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         print(value.user!.uid);
+    String downloadUrl = "";
+
         final bool response =
             await CheckReservedName().checkThisUserAlreadyPresentOrNot(
           fullName,
@@ -27,12 +35,25 @@ class AuthenticationService {
         print(response);
         print("===========");
         if (response == true) {
+          File compressedFile = await compressImage(file);
+          String filename = compressedFile.path.split('/').last;
+          print("Inside here");
+          final uploadFile = await firebaseStorage
+              .ref(
+                  "${FirebaseAuth.instance.currentUser!.uid}/profile_image/${filename}")
+              .putFile(compressedFile);
+          if (uploadFile.state == TaskState.success) {
+            downloadUrl = await firebaseStorage
+                .ref(
+                    "${FirebaseAuth.instance.currentUser!.uid}/profile_image/${filename}")
+                .getDownloadURL();
           await UserDetailStorage()
-              .initialize(fullName, email, password, phoneNumber);
+              .initialize(fullName, email, password, phoneNumber,downloadUrl);
           await Hive.box<int>(DatabaseHelper.authenticationDB).put("state", 1);
           await Hive.box<String>(DatabaseHelper.userIdDB)
               .put("uid", value.user!.uid);
           OurToast().showSuccessToast("Sign up successful");
+          }
         } else {
           OurToast().showErrorToast("Username already reserved");
           await FirebaseAuth.instance.currentUser!.delete();

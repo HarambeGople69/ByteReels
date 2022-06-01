@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,13 +43,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     // TODO: implement initState
     super.initState();
     FirebaseMessaging.instance.getInitialMessage();
+
     FirebaseMessaging.onMessage.listen((event) {
+      print("Hello");
+      print(FirebaseMessaging.onMessage.isBroadcast);
+      print("Hello");
       print("object 2");
       print(event.data);
+
+      // if (event.data != null) {
+      //   print("Hello world");
       LocalNotificationService.display(event);
+      // }
     });
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       print(event.data);
+      LocalNotificationService.display(event);
     });
     // storeNotificationToken();
   }

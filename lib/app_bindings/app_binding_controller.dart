@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:myapp/controllers/dashboard_controller.dart';
 import 'package:myapp/controllers/processing_controller.dart';
+import 'package:myapp/controllers/send_message_controller.dart';
 import 'package:myapp/controllers/video_controller.dart';
 
 import '../controllers/download_indicator.dart';
@@ -21,6 +22,9 @@ class MyBinding implements Bindings {
     );
     Get.lazyPut(
       () => DownloadController(),
+    );
+    Get.lazyPut(
+      () => MessageSendController(),
     );
   }
 }

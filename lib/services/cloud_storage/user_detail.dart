@@ -6,7 +6,7 @@ import 'package:myapp/widgets/our_flutter_toast.dart';
 
 class UserDetailStorage {
   initialize(String fullname, String email, String password,
-      String phoneNumber) async {
+      String phoneNumber,String imageUrl) async {
     String? token = await FirebaseMessaging.instance.getToken();
     print("===============");
     print("Inside user detail storage");
@@ -29,7 +29,7 @@ class UserDetailStorage {
         "bio": "",
         "created_on": Timestamp.now(),
         "phone_number": phoneNumber,
-        "profile_pic": "",
+        "profile_pic": imageUrl,
         "user_name": fullname,
         "email": email,
         "password": password,

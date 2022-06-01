@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:myapp/controllers/processing_controller.dart';
 import 'package:myapp/services/authentication_services/authentication_services.dart';
@@ -20,6 +22,7 @@ import 'package:myapp/widgets/our_password_field.dart';
 import 'package:myapp/widgets/our_sized_box.dart';
 import 'package:myapp/widgets/our_spinner.dart';
 import 'package:myapp/widgets/our_text_field.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../services/check peserved name/check_reserved_name.dart';
 import '../../widgets/our_shimmer_text.dart';
@@ -36,6 +39,34 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   File? file;
+
+  pickImage() async {
+    Permission _permission = Permission.storage;
+    PermissionStatus _status = await _permission.request();
+
+    if (!_status.isGranted) {
+      await Permission.location.request();
+    }
+    if (_status.isPermanentlyDenied) {
+      AppSettings.openAppSettings();
+      print("=========================");
+    }
+
+    try {
+      final ImagePicker _picker = ImagePicker();
+      var result = await _picker.pickImage(source: ImageSource.gallery);
+      ;
+
+      if (result != null) {
+        setState(() {});
+        file = File(result.path);
+      } else {
+        // User canceled the picker
+      }
+    } catch (e) {
+      print("$e =========");
+    }
+  }
 
   TextEditingController _name_controller = TextEditingController();
   TextEditingController _phone_controller = TextEditingController();
@@ -68,14 +99,77 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: SingleChildScrollView(
                       child: Column(
                     children: [
-                      Image.asset(
-                        "assets/images/logo.png",
-                        fit: BoxFit.fitHeight,
-                        height: ScreenUtil().setSp(250),
-                        width: MediaQuery.of(context).size.width,
+                      // Image.asset(
+                      //   "assets/images/logo.png",
+                      //   fit: BoxFit.fitHeight,
+                      //   height: ScreenUtil().setSp(250),
+                      //   width: MediaQuery.of(context).size.width,
+                      // ),
+                      OurSizedBox(),
+                      Center(
+                        child: file != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  ScreenUtil().setSp(25),
+                                ),
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Image.file(
+                                    file!,
+                                    height: ScreenUtil().setSp(200),
+                                    width: ScreenUtil().setSp(
+                                      200,
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              )
+                            : Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      ScreenUtil().setSp(25),
+                                    ),
+                                    child: Image.asset(
+                                      "assets/images/profile_holder.png",
+                                      height: ScreenUtil().setSp(200),
+                                      width: ScreenUtil().setSp(
+                                        200,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: InkWell(
+                                      onTap: () {
+                                        // print("Button Pressed");
+                                        pickImage();
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: logoColor,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: ScreenUtil().setSp(5),
+                                          vertical: ScreenUtil().setSp(5),
+                                        ),
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                          size: ScreenUtil().setSp(25),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ),
                       const OurSizedBox(),
-                      OurShimmerText(title: "ByteReels"),
+                      OurShimmerText(title: "Sign Up"),
                       OurSizedBox(),
                       CustomTextField(
                         start: _name_node,
@@ -120,33 +214,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const OurSizedBox(),
                       const OurSizedBox(),
                       OurElevatedButton(
-                        title: "Sign Up",
-                        function: () async {
-                          if (_name_controller.text.trim().isEmpty ||
-                              _email_controller.text.trim().isEmpty ||
-                              _password_controller.text.trim().isEmpty ||
-                              _phone_controller.text.trim().isEmpty) {
-                            OurToast().showErrorToast("Fields can't be empty");
-                          } else {
-                            print("object1");
-                            Get.find<ProcessingController>().toggle(true);
+                          title: "Sign Up",
+                          function: () async {
+                            if (file != null) {
+                              if (_name_controller.text.trim().isEmpty ||
+                                  _email_controller.text.trim().isEmpty ||
+                                  _password_controller.text.trim().isEmpty ||
+                                  _phone_controller.text.trim().isEmpty) {
+                                OurToast()
+                                    .showErrorToast("Fields can't be empty");
+                              } else {
+                                print("object1");
+                                Get.find<ProcessingController>().toggle(true);
 
-                            // if (response == true) {
-                            await AuthenticationService().signup(
-                              _name_controller.text.trim(),
-                              _email_controller.text.trim(),
-                              _password_controller.text.trim(),
-                              _phone_controller.text.trim(),
-                              context,
-                            );
-                            // } else {
-                            //   OurToast()
-                            //       .showErrorToast("Username already taken");
-                            // }
-                            Get.find<ProcessingController>().toggle(false);
-                          }
-                        },
-                      ),
+                                // if (response == true) {
+                                await AuthenticationService().signup(
+                                  _name_controller.text.trim(),
+                                  _email_controller.text.trim(),
+                                  _password_controller.text.trim(),
+                                  _phone_controller.text.trim(),
+                                  context,
+                                  file!,
+                                );
+                                // } else {
+                                //   OurToast()
+                                //       .showErrorToast("Username already taken");
+                                // }
+                                Get.find<ProcessingController>().toggle(false);
+                              }
+                            } else {
+                              OurToast()
+                                  .showErrorToast("Please pick profile image");
+                            }
+                          }),
                     ],
                   )),
                 ),

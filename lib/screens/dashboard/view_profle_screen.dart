@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:myapp/models/video_model.dart';
+import 'package:myapp/screens/dashboard/message_send_screen.dart';
 import 'package:myapp/services/cloud_storage/follow_unfollow_feature.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_shimmer_widget.dart';
 import 'package:myapp/widgets/our_sized_box.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../models/user_model.dart';
 import '../../widgets/our_elevated_button.dart';
@@ -175,7 +177,20 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                                     Expanded(
                                                       child: OurElevatedButton(
                                                         title: "Message",
-                                                        function: () {},
+                                                        function: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            PageTransition(
+                                                              type: PageTransitionType
+                                                                  .leftToRight,
+                                                              child:
+                                                                  MessageSendScreen(
+                                                                userModel:
+                                                                    userModel,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
                                                     ),
                                                   ],

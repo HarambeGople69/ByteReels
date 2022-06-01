@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,14 @@ import 'package:myapp/screens/splash_screen/splash_screen.dart';
 import 'package:myapp/services/local_push_notification/local_push_notification.dart';
 import 'app_bindings/app_binding_controller.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+  print("INside background handler");
+  LocalNotificationService.display(message);
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -18,6 +27,8 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox<int>(DatabaseHelper.authenticationDB);
   await Hive.openBox<String>(DatabaseHelper.userIdDB);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onMessage.elementAt(0).asStream().listen
   runApp(MyApp());
 }
 
@@ -25,7 +36,7 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {  
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     //Set the fit size (Find your UI design, look at the dimensions of the device screen and fill it in,unit in dp)

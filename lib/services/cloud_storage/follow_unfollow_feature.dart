@@ -47,8 +47,7 @@ class FollowUnfollowDetailFirebase {
       await LocalNotificationService().sendNotification(
           "${followeruserModel.user_name} started following you",
           "",
-
-          "${followeruserModel.profile_pic}",
+          followeruserModel.profile_pic,
           "",
           userModel.token);
     } catch (e) {

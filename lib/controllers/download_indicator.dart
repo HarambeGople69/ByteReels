@@ -8,6 +8,7 @@ class DownloadController extends GetxController {
   }
 
   changeIndicator(double value) {
+    // print("=============aa++++++++");
     progressIndicator.value = value;
   }
 }
