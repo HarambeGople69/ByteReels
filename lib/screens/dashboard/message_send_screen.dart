@@ -257,6 +257,7 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
                         title: "Send message",
                         type: TextInputType.name,
                         number: 1,
+                        length: 1,
                       ),
                     ),
                     SizedBox(
@@ -273,11 +274,11 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
                               _messaging_controller.text.trim(),
                               widget.userModel,
                             );
+                            _messaging_controller.clear();
                             // Get.find<ProcessingController>().toggle(false);
                             Get.find<MessageSendController>().toggle(true);
 
                             print("Its not empty");
-                            _messaging_controller.clear();
                             FocusScope.of(context).unfocus();
                           } else {}
                         } else {

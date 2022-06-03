@@ -62,13 +62,6 @@ class FollowUnfollowDetailFirebase {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get());
 
-    // await FirebaseFirestore.instance
-    //     .collection("Notification")
-    //     .doc(userModel.uid)
-    //     .collection("Notify")
-    //     .doc(followeruserModel.uid)
-    //     .delete();
-
     await FirebaseFirestore.instance
         .collection("Users")
         .doc(userModel.uid)
@@ -84,8 +77,63 @@ class FollowUnfollowDetailFirebase {
       "followingList": FieldValue.arrayRemove([userModel.uid]),
       "following": followeruserModel.following - 1,
     });
-    // await LocalNotificationService().sendNotification(
-    //     "${followeruserModel.user_name} unfollowed you", "", userModel.token);
+    try {
+      await FirebaseFirestore.instance
+          .collection("ChatRoom")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("Chat")
+          .doc(userModel.uid)
+          .collection("Messages")
+          .get()
+          .then((snapshot) async {
+        for (DocumentSnapshot doc in snapshot.docs) {
+          await doc.reference.delete();
+          print("======");
+          print(doc);
+        }
+      });
+
+      await FirebaseFirestore.instance
+          .collection("ChatRoom")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("Chat")
+          .doc(userModel.uid)
+          .delete();
+
+      // .delete()
+      // .then((value) => print("DELETED FIRST"));
+    } catch (e) {
+      print("==========");
+      print(e.toString());
+      print("==========");
+    }
+    try {
+      await FirebaseFirestore.instance
+          .collection("ChatRoom")
+          .doc(userModel.uid)
+          .collection("Chat")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("Messages")
+          .get()
+          .then((snapshot) async {
+        for (DocumentSnapshot doc in snapshot.docs) {
+          await doc.reference.delete();
+          print("======");
+          print(doc);
+        }
+      });
+      await FirebaseFirestore.instance
+          .collection("ChatRoom")
+          .doc(userModel.uid)
+          .collection("Chat")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .delete();
+    } catch (e) {
+      print("==========");
+      print(e.toString());
+      print("==========");
+    }
+
     print("Geda Done=================");
   }
 }

@@ -15,7 +15,7 @@ import '../check peserved name/check_reserved_name.dart';
 
 class AuthenticationService {
   signup(String fullName, String email, String password, String phoneNumber,
-      BuildContext context,File file) async {
+      BuildContext context, File file) async {
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
     Get.find<ProcessingController>().toggle(true);
@@ -24,7 +24,7 @@ class AuthenticationService {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         print(value.user!.uid);
-    String downloadUrl = "";
+        String downloadUrl = "";
 
         final bool response =
             await CheckReservedName().checkThisUserAlreadyPresentOrNot(
@@ -47,12 +47,13 @@ class AuthenticationService {
                 .ref(
                     "${FirebaseAuth.instance.currentUser!.uid}/profile_image/${filename}")
                 .getDownloadURL();
-          await UserDetailStorage()
-              .initialize(fullName, email, password, phoneNumber,downloadUrl);
-          await Hive.box<int>(DatabaseHelper.authenticationDB).put("state", 1);
-          await Hive.box<String>(DatabaseHelper.userIdDB)
-              .put("uid", value.user!.uid);
-          OurToast().showSuccessToast("Sign up successful");
+            await UserDetailStorage().initialize(
+                fullName, email, password, phoneNumber, downloadUrl);
+            await Hive.box<int>(DatabaseHelper.authenticationDB)
+                .put("state", 1);
+            await Hive.box<String>(DatabaseHelper.userIdDB)
+                .put("uid", value.user!.uid);
+            OurToast().showSuccessToast("Sign up successful");
           }
         } else {
           OurToast().showErrorToast("Username already reserved");
@@ -92,6 +93,7 @@ class AuthenticationService {
 
   logout() async {
     try {
+      await UserDetailStorage().deleteNotificationToken();
       await FirebaseAuth.instance.signOut().then((value) {
         Hive.box<String>(DatabaseHelper.userIdDB).clear();
         Hive.box<int>(DatabaseHelper.authenticationDB).clear();
