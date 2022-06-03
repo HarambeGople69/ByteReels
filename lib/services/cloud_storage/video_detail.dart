@@ -34,6 +34,18 @@ class VideoDetailStorage {
         "likeNumber": 0,
         "commentNumber": 0,
         "downloadNumber": 0,
+      });
+      await FirebaseFirestore.instance.collection("AllVideos").doc(uid).set({
+        "postId": uid,
+        "ownerId": FirebaseAuth.instance.currentUser!.uid,
+        "caption": caption,
+        "thumbnailUrl": thumbnailUrl,
+        "videoUrl": videoUrl,
+        "timestamp": Timestamp.now(),
+        "likes": [],
+        "likeNumber": 0,
+        "commentNumber": 0,
+        "downloadNumber": 0,
       }).then(
         (value) => OurToast().showSuccessToast("Video uploaded successfully"),
       );

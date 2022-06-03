@@ -64,6 +64,7 @@ class _OurPostTileState extends State<OurPostTile> {
             type: PageTransitionType.leftToRight,
             child: FullScreenPlay(
               videoModel: widget.videoModel,
+              addback: true,
             ),
           ),
         );

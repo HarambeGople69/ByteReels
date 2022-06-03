@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:myapp/controllers/download_indicator.dart';
+import 'package:myapp/controllers/video_controller.dart';
 import 'package:myapp/models/comment_model.dart';
 import 'package:myapp/models/video_model.dart';
 import 'package:myapp/services/cloud_storage/comment_detail.dart';
@@ -30,30 +31,34 @@ import '../../models/user_model.dart';
 import '../../widgets/our_sized_box.dart';
 
 class FullScreenPlay extends StatefulWidget {
+  final bool addback;
   final VideoModel videoModel;
-  const FullScreenPlay({Key? key, required this.videoModel}) : super(key: key);
+  const FullScreenPlay(
+      {Key? key, required this.videoModel, required this.addback})
+      : super(key: key);
 
   @override
   State<FullScreenPlay> createState() => _FullScreenPlayState();
 }
 
 class _FullScreenPlayState extends State<FullScreenPlay> {
-  late VideoPlayerController controller;
+  // late VideoPlayerController controller;
   bool isLiked = false;
   bool isHeartAnimating = false;
   String progress = "";
   bool canComment = true;
   initializeController() {
-    setState(() {
-      controller = VideoPlayerController.network(widget.videoModel.videoUrl);
-      controller.initialize();
-      controller.play();
-      controller.setVolume(1);
-      controller.setLooping(false);
-      // print("=============");
-      // print(controller.value);
-      // print("=============");
-    });
+    Get.find<VideoController>().initialize(widget.videoModel.videoUrl);
+    // setState(() {
+    //   controller = VideoPlayerController.network(widget.videoModel.videoUrl);
+    //   controller.initialize();
+    //   controller.play();
+    //   controller.setVolume(1);
+    //   controller.setLooping(false);
+    //   // print("=============");
+    //   // print(controller.value);
+    //   // print("=============");
+    // });
   }
 
   @override
@@ -69,7 +74,7 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
     // TODO: implement dispose
     super.dispose();
     print("dispose");
-    controller.dispose();
+    Get.find<VideoController>().dispose();
   }
 
   @override
@@ -77,7 +82,7 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
     return Obx(() => WillPopScope(
           onWillPop: () async {
             print("object");
-            controller.dispose();
+            Get.find<VideoController>().dispose();
             Navigator.pop(context);
             return false;
           },
@@ -138,31 +143,35 @@ class _FullScreenPlayState extends State<FullScreenPlay> {
                       Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
-                        child: VideoPlayer(controller),
+                        child: VideoPlayer(Get.find<VideoController>()
+                            .videoPlayerController
+                            .value),
                       ),
-                      InkWell(
-                        onTap: () {
-                          controller.dispose();
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setSp(5),
-                            vertical: ScreenUtil().setSp(5),
-                          ),
-                          height: ScreenUtil().setSp(40),
-                          width: ScreenUtil().setSp(40),
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: ScreenUtil().setSp(25),
-                          ),
-                        ),
-                      ),
+                      widget.addback == true
+                          ? InkWell(
+                              onTap: () {
+                                Get.find<VideoController>().dispose();
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setSp(5),
+                                  vertical: ScreenUtil().setSp(5),
+                                ),
+                                height: ScreenUtil().setSp(40),
+                                width: ScreenUtil().setSp(40),
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                  size: ScreenUtil().setSp(25),
+                                ),
+                              ),
+                            )
+                          : Container(),
                       Positioned(
                         bottom: 0,
                         child: Container(

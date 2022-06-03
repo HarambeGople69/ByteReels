@@ -20,6 +20,8 @@ import 'package:myapp/services/local_push_notification/local_push_notification.d
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_elevated_button.dart';
 
+import '../../controllers/video_controller.dart';
+
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({Key? key}) : super(key: key);
 
@@ -89,7 +91,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           showUnselectedLabels: false,
           showSelectedLabels: true,
           currentIndex: Get.find<DashboardController>().indexs.value,
-          onTap: (index) => Get.find<DashboardController>().changeIndexs(index),
+          onTap: (index) {
+            Get.find<DashboardController>().changeIndexs(index);
+            Get.find<VideoController>().dispose();
+          },
           items: [
             BottomNavigationBarItem(
                 icon: Icon(

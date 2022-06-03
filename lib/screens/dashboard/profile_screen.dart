@@ -8,6 +8,7 @@ import 'package:myapp/models/user_model.dart';
 import 'package:myapp/models/video_model.dart';
 import 'package:myapp/screens/dashboard/edit_screen.dart';
 import 'package:myapp/services/authentication_services/authentication_services.dart';
+import 'package:myapp/services/home_video_check.dart';
 import 'package:myapp/utils/colors.dart';
 import 'package:myapp/widgets/our_elevated_button.dart';
 import 'package:myapp/widgets/our_post_tile.dart';
@@ -151,6 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   OurProfileDetailNumberColumn(
                                                     function: () {
                                                       // print("POSTS");
+                                                      HomeVideoCheck().check();
                                                     },
                                                     title: "Posts",
                                                     number: userModel.post
