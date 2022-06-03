@@ -138,16 +138,26 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
                                               OurProfileDetailNumberColumn(
+                                                function: () {},
                                                 title: "Posts",
                                                 number:
                                                     userModel.post.toString(),
                                               ),
                                               OurProfileDetailNumberColumn(
+                                                function: () {
+                                                  // print("FOLLOWERS");
+                                                  print(
+                                                      userModel.followingList);
+                                                },
                                                 title: "Followers",
                                                 number: userModel.follower
                                                     .toString(),
                                               ),
                                               OurProfileDetailNumberColumn(
+                                                function: () {
+                                                  // print("FOLLOWERING");
+                                                  print(userModel.followerList);
+                                                },
                                                 title: "Followering",
                                                 number: userModel.following
                                                     .toString(),

@@ -17,6 +17,8 @@ import 'package:myapp/widgets/our_sized_box.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../widgets/our_spinner.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -147,16 +149,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .spaceEvenly,
                                                 children: [
                                                   OurProfileDetailNumberColumn(
+                                                    function: () {
+                                                      // print("POSTS");
+                                                    },
                                                     title: "Posts",
                                                     number: userModel.post
                                                         .toString(),
                                                   ),
                                                   OurProfileDetailNumberColumn(
+                                                    function: () {
+                                                      followersBottomSheet(
+                                                          context,
+                                                          userModel
+                                                              .followerList);
+                                                    },
                                                     title: "Followers",
                                                     number: userModel.follower
                                                         .toString(),
                                                   ),
                                                   OurProfileDetailNumberColumn(
+                                                    function: () {
+                                                      followingBottomSheet(
+                                                          context,
+                                                          userModel
+                                                              .followingList);
+                                                    },
                                                     title: "Following",
                                                     number: userModel.following
                                                         .toString(),
@@ -473,6 +490,328 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void followersBottomSheet(BuildContext context, List likesUid) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          margin: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setSp(10),
+            vertical: ScreenUtil().setSp(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Followers',
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(20),
+                    color: logoColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Divider(),
+              // Column(
+              //   children: likesUid.map((e) => Text(e)).toList(),
+              // )
+              Expanded(
+                child: likesUid.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: likesUid.length,
+                        itemBuilder: (context, index) {
+                          return StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("Users")
+                                .doc(likesUid[index])
+                                .snapshots(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                UserModel userModel =
+                                    UserModel.fromMap(snapshot.data);
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenUtil().setSp(10),
+                                    vertical: ScreenUtil().setSp(10),
+                                  ),
+                                  child: Row(
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.start,
+                                    children: [
+                                      userModel.profile_pic != ""
+                                          ? CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: ScreenUtil().setSp(20),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  ScreenUtil().setSp(25),
+                                                ),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      userModel.profile_pic,
+
+                                                  // Image.network(
+                                                  placeholder: (context, url) =>
+                                                      Image.asset(
+                                                    "assets/images/profile_holder.png",
+                                                    width: double.infinity,
+                                                    height:
+                                                        ScreenUtil().setSp(125),
+                                                    fit: BoxFit.fitWidth,
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Image.asset(
+                                                    "assets/images/profile_holder.png",
+                                                    width: double.infinity,
+                                                    height:
+                                                        ScreenUtil().setSp(125),
+                                                    fit: BoxFit.fitWidth,
+                                                  ),
+                                                  height:
+                                                      ScreenUtil().setSp(70),
+                                                  width: ScreenUtil().setSp(70),
+                                                  fit: BoxFit.cover,
+                                                  //   )
+                                                ),
+                                              ))
+                                          : CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: ScreenUtil().setSp(20),
+                                              child: Text(
+                                                userModel.user_name[0]
+                                                    .toUpperCase(),
+                                                style: TextStyle(
+                                                  fontSize: ScreenUtil().setSp(
+                                                    20,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: ScreenUtil().setSp(20),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            userModel.user_name,
+                                            style: TextStyle(
+                                                fontSize:
+                                                    ScreenUtil().setSp(15),
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          SizedBox(
+                                            height: ScreenUtil().setSp(4.5),
+                                          ),
+                                          userModel.bio.isNotEmpty
+                                              ? Text(
+                                                  userModel.bio,
+                                                  style: TextStyle(
+                                                    fontSize: ScreenUtil()
+                                                        .setSp(12.5),
+                                                    color: Colors.grey[300],
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
+                                                )
+                                              : Container(),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              return Center(
+                                child: OurSpinner(),
+                              );
+                            },
+                          );
+                        })
+                    : Center(
+                        child: Text(
+                          "No Followers",
+                          style: TextStyle(
+                            color: logoColor,
+                            fontSize: ScreenUtil().setSp(20),
+                          ),
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void followingBottomSheet(BuildContext context, List likesUid) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          margin: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setSp(10),
+            vertical: ScreenUtil().setSp(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Following',
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(20),
+                    color: logoColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Divider(),
+              // Column(
+              //   children: likesUid.map((e) => Text(e)).toList(),
+              // )
+              Expanded(
+                child: likesUid.isNotEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: likesUid.length,
+                        itemBuilder: (context, index) {
+                          return StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("Users")
+                                .doc(likesUid[index])
+                                .snapshots(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                UserModel userModel =
+                                    UserModel.fromMap(snapshot.data);
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ScreenUtil().setSp(10),
+                                    vertical: ScreenUtil().setSp(10),
+                                  ),
+                                  child: Row(
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.start,
+                                    children: [
+                                      userModel.profile_pic != ""
+                                          ? CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: ScreenUtil().setSp(20),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  ScreenUtil().setSp(25),
+                                                ),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      userModel.profile_pic,
+
+                                                  // Image.network(
+                                                  placeholder: (context, url) =>
+                                                      Image.asset(
+                                                    "assets/images/profile_holder.png",
+                                                    width: double.infinity,
+                                                    height:
+                                                        ScreenUtil().setSp(125),
+                                                    fit: BoxFit.fitWidth,
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Image.asset(
+                                                    "assets/images/profile_holder.png",
+                                                    width: double.infinity,
+                                                    height:
+                                                        ScreenUtil().setSp(125),
+                                                    fit: BoxFit.fitWidth,
+                                                  ),
+                                                  height:
+                                                      ScreenUtil().setSp(70),
+                                                  width: ScreenUtil().setSp(70),
+                                                  fit: BoxFit.cover,
+                                                  //   )
+                                                ),
+                                              ))
+                                          : CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: ScreenUtil().setSp(20),
+                                              child: Text(
+                                                userModel.user_name[0]
+                                                    .toUpperCase(),
+                                                style: TextStyle(
+                                                  fontSize: ScreenUtil().setSp(
+                                                    20,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: ScreenUtil().setSp(20),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            userModel.user_name,
+                                            style: TextStyle(
+                                                fontSize:
+                                                    ScreenUtil().setSp(15),
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          SizedBox(
+                                            height: ScreenUtil().setSp(4.5),
+                                          ),
+                                          userModel.bio.isNotEmpty
+                                              ? Text(
+                                                  userModel.bio,
+                                                  style: TextStyle(
+                                                    fontSize: ScreenUtil()
+                                                        .setSp(12.5),
+                                                    color: Colors.grey[300],
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
+                                                )
+                                              : Container(),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              return Center(
+                                child: OurSpinner(),
+                              );
+                            },
+                          );
+                        })
+                    : Center(
+                        child: Text(
+                          "No Following",
+                          style: TextStyle(
+                            color: logoColor,
+                            fontSize: ScreenUtil().setSp(20),
+                          ),
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
