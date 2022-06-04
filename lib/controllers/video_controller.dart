@@ -13,7 +13,7 @@ class VideoController extends GetxController {
       videoPlayerController.value.initialize();
       videoPlayerController.value.play();
       videoPlayerController.value.setVolume(1);
-      videoPlayerController.value.setLooping(false);
+      videoPlayerController.value.setLooping(true);
     } catch (e) {
       print("==============");
       print(e);

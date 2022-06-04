@@ -117,25 +117,25 @@ class _EditScreenState extends State<EditScreen> {
                   child: Column(
                     children: [
                       Center(
-                          child: widget.userModel.profile_pic.isEmpty
-                              ? file != null
+                          child: file != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    ScreenUtil().setSp(25),
+                                  ),
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Image.file(
+                                      file!,
+                                      height: ScreenUtil().setSp(150),
+                                      width: ScreenUtil().setSp(
+                                        150,
+                                      ),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                )
+                              : widget.userModel.profile_pic.isEmpty
                                   ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                        ScreenUtil().setSp(25),
-                                      ),
-                                      child: Container(
-                                        color: Colors.white,
-                                        child: Image.file(
-                                          file!,
-                                          height: ScreenUtil().setSp(150),
-                                          width: ScreenUtil().setSp(
-                                            150,
-                                          ),
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                    )
-                                  : ClipRRect(
                                       borderRadius: BorderRadius.circular(
                                         ScreenUtil().setSp(25),
                                       ),
@@ -148,38 +148,39 @@ class _EditScreenState extends State<EditScreen> {
                                         fit: BoxFit.cover,
                                       ),
                                     )
-                              : CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: ScreenUtil().setSp(75),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      ScreenUtil().setSp(35),
-                                    ),
-                                    child: CachedNetworkImage(
-                                      imageUrl: widget.userModel.profile_pic,
+                                  : CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: ScreenUtil().setSp(75),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                          ScreenUtil().setSp(35),
+                                        ),
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              widget.userModel.profile_pic,
 
-                                      // Image.network(
-                                      placeholder: (context, url) =>
-                                          Image.asset(
-                                        "assets/images/profile_holder.png",
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        fit: BoxFit.fitWidth,
+                                          // Image.network(
+                                          placeholder: (context, url) =>
+                                              Image.asset(
+                                            "assets/images/profile_holder.png",
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Image.asset(
+                                            "assets/images/profile_holder.png",
+                                            width: double.infinity,
+                                            height: ScreenUtil().setSp(125),
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                          height: ScreenUtil().setSp(150),
+                                          width: ScreenUtil().setSp(150),
+                                          fit: BoxFit.cover,
+                                          //   )
+                                        ),
                                       ),
-                                      errorWidget: (context, url, error) =>
-                                          Image.asset(
-                                        "assets/images/profile_holder.png",
-                                        width: double.infinity,
-                                        height: ScreenUtil().setSp(125),
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                      height: ScreenUtil().setSp(150),
-                                      width: ScreenUtil().setSp(150),
-                                      fit: BoxFit.cover,
-                                      //   )
-                                    ),
-                                  ),
-                                )),
+                                    )),
                       OurSizedBox(),
                       Center(
                         child: OutlinedButton(

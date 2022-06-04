@@ -28,7 +28,7 @@ class OurProfileDetailNumberColumn extends StatelessWidget {
               title,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: ScreenUtil().setSp(20),
+                fontSize: ScreenUtil().setSp(17.5),
               ),
             ),
             // OurSizedBox(),
@@ -39,7 +39,7 @@ class OurProfileDetailNumberColumn extends StatelessWidget {
               number,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: ScreenUtil().setSp(20),
+                fontSize: ScreenUtil().setSp(17),
               ),
             )
           ],
